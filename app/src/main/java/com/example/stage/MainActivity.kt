@@ -13,6 +13,7 @@ import android.text.TextWatcher
 import android.R.id.tabs
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import responses.MovieResponse
+import responses.UserResponse
 
 
 class MainActivity : AppCompatActivity() {
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var tabLayout: TabLayout
 
     var movieList: ArrayList<MovieResponse> = ArrayList()
-    var userList: ArrayList<User> = ArrayList()
+    var userList: ArrayList<UserResponse> = ArrayList()
     var movieAdapter: MovieListAdapter? = null
     var userAdapter: UserListAdapter? = null
 
@@ -64,9 +65,9 @@ class MainActivity : AppCompatActivity() {
         val m3 = MovieResponse(3,"The Dark Knight", 3,"3",2008)
         val m4 = MovieResponse(4,"The Shining", 4,"4",1980)
 
-        val u1 = User("naderi")
-        val u2 = User("safdel")
-        val u3 = User("saber")
+        val u1 = UserResponse("naderi")
+        val u2 = UserResponse("safdel")
+        val u3 = UserResponse("saber")
 
         movieList.add(m1)
         movieList.add(m2)

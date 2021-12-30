@@ -6,8 +6,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import responses.UserResponse
 
-class UserListAdapter(private val context: Context, private val arrayList: java.util.ArrayList<User>): BaseAdapter() {
+class UserListAdapter(private val context: Context, private val arrayList: java.util.ArrayList<UserResponse>): BaseAdapter() {
 
     private lateinit var username: TextView
 

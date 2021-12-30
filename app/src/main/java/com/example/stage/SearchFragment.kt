@@ -27,17 +27,21 @@ import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
 import org.json.JSONTokener
 import responses.MovieResponse
+import responses.UserResponse
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
     private var activeUrl = GlobalVariables.getActiveURL()
     var movies: ArrayList<MovieResponse> = ArrayList()
     var movieAdapter: MovieListAdapter? = null
+    var users: ArrayList<UserResponse> = ArrayList()
+    var userAdapter: UserListAdapter? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         movieAdapter = activity?.let { MovieListAdapter(it, movies) }
+        userAdapter = activity?.let { UserListAdapter(it, users) }
     }
 
     override fun onCreateView(
@@ -51,13 +55,26 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         val tabLayout: TabLayout = view.findViewById(R.id.tabs)
         val listView: ListView = view.findViewById(R.id.search_list)
 
-        listView.adapter = movieAdapter
+        if (tabLayout.selectedTabPosition == 0) {
+            listView.adapter = movieAdapter
+        }
+        else {
+            listView.adapter = userAdapter
+        }
 
 
         searchBox.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                movieAdapter = activity?.let { MovieListAdapter(it, movies) }
-                listView.adapter = movieAdapter
+                if (tabLayout.selectedTabPosition == 0) {
+                    //movies search
+                    movieAdapter = activity?.let { MovieListAdapter(it, movies) }
+                    listView.adapter = movieAdapter
+                } else {
+                    //users search
+                    userAdapter = activity?.let { UserListAdapter(it, users) }
+                    listView.adapter = userAdapter
+                }
+
                 true
             } else {
                 false
@@ -71,24 +88,43 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 val json = JSONObject()
 
                 GlobalScope.launch {
-
                     json.put("searchTerm", searchBox.text.toString())
                     println(json)
-                    Fuel.post("$activeUrl/user/searchMovies")
-                        .authentication()
-                        .basic(username, password)
-                        .jsonBody(json.toString())
-                        .also { print(it) }
-                        .responseObject(MovieResponse.Deserializer()) { request, response, result ->
-                            val (movie, err) = result
-                            //Add to ArrayList
-                            movies.clear()
+                    if (tabLayout.selectedTabPosition == 0) {
+                        Fuel.post("$activeUrl/user/searchMovies")
+                            .authentication()
+                            .basic(username, password)
+                            .jsonBody(json.toString())
+                            .also { print(it) }
+                            .responseObject(MovieResponse.Deserializer()) { request, response, result ->
+                                val (movie, err) = result
+                                //Add to ArrayList
+                                movies.clear()
 
-                            movie?.forEach { mv ->
-                                movies.add(mv)
+                                movie?.forEach { mv ->
+                                    movies.add(mv)
+                                }
                             }
+                    }
+                    else {
+                        Fuel.post("$activeUrl/user/searchUsers")
+                            .authentication()
+                            .basic(username, password)
+                            .jsonBody(json.toString())
+                            .also { print(it) }
+                            .responseObject(UserResponse.Deserializer()) { request, response, result ->
+                                val (user, err) = result
+                                //Add to ArrayList
+                                users.clear()
 
-                        }
+                                user?.forEach { usr ->
+                                    users.add(usr)
+                                }
+
+                            }
+                    }
+
+
                 }
             }
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -98,6 +134,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
+                if (tab.position == 0) {
+                    //movies tab selected
+                }
+                else {
+                    //users tab selected
+                }
                 //search(tab.position, textBox.text.toString())
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {}
