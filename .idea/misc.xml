@@ -6,8 +6,13 @@
         <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/layout/activity_complete_profile.xml" value="0.1" />
         <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/layout/activity_login.xml" value="0.264" />
         <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/layout/activity_main2.xml" value="0.176" />
-        <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/layout/activity_timeline.xml" value="0.264" />
+        <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/layout/activity_timeline.xml" value="0.1" />
+        <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/layout/fragment_profile.xml" value="0.22826086956521738" />
+        <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/layout/fragment_timeline.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/layout/fragment_timeline_gragment.xml" value="0.13020833333333334" />
+        <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/layout/post_row.xml" value="0.13020833333333334" />
         <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/layout/user_name_form.xml" value="0.152" />
+        <entry key="..\:/Users/mhnad/Desktop/Stage/Final/app/src/main/res/menu/nav_menu.xml" value="0.13020833333333334" />
       </map>
     </option>
   </component>
