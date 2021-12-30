@@ -12,6 +12,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.R.id.tabs
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
+import responses.MovieResponse
 
 
 class MainActivity : AppCompatActivity() {
@@ -20,7 +21,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var textBox: EditText
     private lateinit var tabLayout: TabLayout
 
-    var movieList: ArrayList<Movie> = ArrayList()
+    var movieList: ArrayList<MovieResponse> = ArrayList()
     var userList: ArrayList<User> = ArrayList()
     var movieAdapter: MovieListAdapter? = null
     var userAdapter: UserListAdapter? = null
@@ -58,10 +59,10 @@ class MainActivity : AppCompatActivity() {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        val m1 = Movie("The Godfather", 1972, "Francis Ford Coppola")
-        val m2 = Movie("Fight Club", 1999, "David Fincher")
-        val m3 = Movie("The Dark Knight", 2008, "Christopher Nolan")
-        val m4 = Movie("The Shining", 1980, "Stanley Kubrick")
+        val m1 = MovieResponse(1,"The Godfather",1,"1", 1972)
+        val m2 = MovieResponse(2,"Fight Club", 2,"2",1999)
+        val m3 = MovieResponse(3,"The Dark Knight", 3,"3",2008)
+        val m4 = MovieResponse(4,"The Shining", 4,"4",1980)
 
         val u1 = User("naderi")
         val u2 = User("safdel")
@@ -86,7 +87,7 @@ class MainActivity : AppCompatActivity() {
             listView.adapter = null
         }
         else if (tabPosition == 0) {
-            val results = movieList.filter { it.name.contains(searchTerm, true) || it.director.contains(searchTerm, true)}
+            val results = movieList.filter { it.title.contains(searchTerm, true) || it.director.toString().contains(searchTerm, true)}
             movieAdapter = MovieListAdapter(this, results.toCollection(ArrayList()))
             listView.adapter = movieAdapter
         } else if (tabPosition == 1){

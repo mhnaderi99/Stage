@@ -6,10 +6,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import responses.MovieResponse
 
-class MovieListAdapter(private val context: Context, private val arrayList: java.util.ArrayList<Movie>): BaseAdapter() {
+class MovieListAdapter(private val context: Context, private val arrayList: java.util.ArrayList<MovieResponse>): BaseAdapter() {
 
-    private lateinit var movieName: TextView
+    private lateinit var movieTitle: TextView
     private lateinit var movieYear: TextView
     private lateinit var director: TextView
 
@@ -26,10 +27,10 @@ class MovieListAdapter(private val context: Context, private val arrayList: java
         var convertView = convertView
         convertView = LayoutInflater.from(context).inflate(R.layout.movie_row, parent, false)
 
-        movieName = convertView.findViewById(R.id.movieName)
+        movieTitle = convertView.findViewById(R.id.movieName)
         movieYear = convertView.findViewById(R.id.movieYear)
         director = convertView.findViewById(R.id.director)
-        movieName.text = " " + arrayList[position].name
+        movieTitle.text = " " + arrayList[position].title
         movieYear.text = " " + arrayList[position].year
         director.text = arrayList[position].director
         return convertView

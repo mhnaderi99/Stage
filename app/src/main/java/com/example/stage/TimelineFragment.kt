@@ -11,8 +11,6 @@ import androidx.fragment.app.Fragment
 
 class TimelineFragment: Fragment(R.layout.fragment_timeline) {
 
-    var postAdapter: TimelineAdapter? = null
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         fillPostList()

@@ -30,11 +30,8 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var emailText: EditText
     private lateinit var OTPText: EditText
     private lateinit var emailAddress: String
-    private var emulator_url: String = "http://10.0.2.2:3030"
-    private var url: String = "http://localhost:3030"
-    private var global_url: String = "http://109.122.245.55:3030"
 
-    private var active_url = global_url;
+    private var activeUrl = GlobalVariables.getActiveURL();
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -53,7 +50,7 @@ class LoginActivity : AppCompatActivity() {
             OTPText = findViewById(R.id.otpCode)
 
             loginButton.setOnClickListener {
-                Fuel.get("$active_url/validateOTP",
+                Fuel.get("$activeUrl/validateOTP",
                     parameters = listOf("email" to emailAddress, "code" to OTPText.text.toString() ))
                     .response { request, response, result ->
                         val (bytes, error) = result
@@ -66,7 +63,7 @@ class LoginActivity : AppCompatActivity() {
                                 val json = JSONObject()
                                 json.put("email", emailAddress)
 
-                                Fuel.get("$active_url/check_email",
+                                Fuel.get("$activeUrl/check_email",
                                     parameters = listOf("email" to emailAddress ))
                                     .response { request, response, result ->
                                         val (bytes, error) = result
@@ -80,7 +77,7 @@ class LoginActivity : AppCompatActivity() {
 
                                                 val jjson = JSONObject()
                                                 jjson.put("email", emailAddress)
-                                                Fuel.post("$active_url/deleteOTP")
+                                                Fuel.post("$activeUrl/deleteOTP")
                                                     .jsonBody(jjson.toString())
                                                     .response { result ->
                                                         val (bytes, error) = result
@@ -122,7 +119,7 @@ class LoginActivity : AppCompatActivity() {
 
                     val json = JSONObject()
                     json.put("email", emailAddress)
-                    Fuel.post("$active_url/generateOTP")
+                    Fuel.post("$activeUrl/generateOTP")
                         .jsonBody(json.toString())
                         .also { print(it) }
                         .response { result ->

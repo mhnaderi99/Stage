@@ -15,11 +15,9 @@ class CompleteProfileActivity: AppCompatActivity() {
 
     private lateinit var submitButton: Button
     private lateinit var usernameText: EditText
-    private var emulator_url: String = "http://10.0.2.2:3030"
-    private var url: String = "http://localhost:3030"
-    private var global_url: String = "http://109.122.245.55:3030"
 
-    private var active_url = global_url;
+    private var activeUrl = GlobalVariables.getActiveURL();
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -36,7 +34,7 @@ class CompleteProfileActivity: AppCompatActivity() {
             val json = JSONObject()
             json.put("email", emailAddress)
             json.put("username", username)
-            Fuel.post("$active_url/signup")
+            Fuel.post("$activeUrl/signup")
                 .jsonBody(json.toString())
                 .response { result ->
                     val (bytes, error) = result
@@ -46,7 +44,7 @@ class CompleteProfileActivity: AppCompatActivity() {
 
                         val jjson = JSONObject()
                         jjson.put("email", emailAddress)
-                        Fuel.post("$active_url/deleteOTP")
+                        Fuel.post("$activeUrl/deleteOTP")
                             .jsonBody(jjson.toString())
                             .response { result ->
                                 val (bytes, error) = result
