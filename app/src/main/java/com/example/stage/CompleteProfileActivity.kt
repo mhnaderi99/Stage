@@ -17,7 +17,7 @@ class CompleteProfileActivity: AppCompatActivity() {
     private lateinit var usernameText: EditText
     private var emulator_url: String = "http://10.0.2.2:3030"
     private var url: String = "http://localhost:3030"
-    private var global_url: String = "https://lovely-parrot-20.loca.lt"
+    private var global_url: String = "https://sour-sheep-76.loca.lt"
 
     private var active_url = global_url;
 
