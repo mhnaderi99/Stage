@@ -36,7 +36,6 @@ class TimelineFragment: Fragment(R.layout.fragment_timeline) {
 
         listView.adapter = activity?.let { TimelineAdapter(it, fillPostList()) }
 
-
         return view
 
     }
