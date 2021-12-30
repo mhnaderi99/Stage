@@ -11,12 +11,11 @@ import androidx.fragment.app.Fragment
 
 class TimelineFragment: Fragment(R.layout.fragment_timeline) {
 
-    var postList: ArrayList<Post> = ArrayList()
     var postAdapter: TimelineAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        fillPostList()
 
 
     }
@@ -35,8 +34,7 @@ class TimelineFragment: Fragment(R.layout.fragment_timeline) {
             logout()
         }
 
-        fillPostList()
-        listView.adapter = activity?.let { TimelineAdapter(it, postList) }
+        listView.adapter = activity?.let { TimelineAdapter(it, fillPostList()) }
 
 
         return view
@@ -53,7 +51,9 @@ class TimelineFragment: Fragment(R.layout.fragment_timeline) {
         startActivity(intent)
     }
 
-    fun fillPostList() {
+    private fun fillPostList(): ArrayList<Post> {
+
+        var postList: ArrayList<Post> = ArrayList()
 
         val p1 = Post("saber", "The Dark Knight", "This is an amazing movie! I would highly recommend it to everyone.", 5, R.drawable.darkknight)
         val p2 = Post("naderi", "Fight Club", "Everything in this movie is so complicated. You have to watch it twice in order to fully understand it.", 4, R.drawable.fightclub)
@@ -62,5 +62,7 @@ class TimelineFragment: Fragment(R.layout.fragment_timeline) {
         postList.add(p1)
         postList.add(p2)
         postList.add(p3)
+
+        return postList
     }
 }
