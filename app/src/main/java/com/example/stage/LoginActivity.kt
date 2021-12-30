@@ -32,7 +32,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var emailAddress: String
     private var emulator_url: String = "http://10.0.2.2:3030"
     private var url: String = "http://localhost:3030"
-    private var global_url: String = "https://sour-sheep-76.loca.lt"
+    private var global_url: String = "http://109.122.245.55:3030"
 
     private var active_url = global_url;
 
