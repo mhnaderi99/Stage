@@ -24,6 +24,7 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import responses.MovieResponse
 import responses.UserResponse
+import java.io.File
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
@@ -107,7 +108,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                             .authentication()
                             .basic(username, password)
                             .jsonBody(json.toString())
-                            .also { print(it) }
                             .responseObject(UserResponse.Deserializer()) { request, response, result ->
                                 val (user, err) = result
                                 //Add to ArrayList
