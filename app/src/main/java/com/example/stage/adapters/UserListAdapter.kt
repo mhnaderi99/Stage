@@ -14,6 +14,7 @@ import com.github.kittinunf.fuel.Fuel
 import kotlinx.coroutines.runBlocking
 import responses.UserResponse
 import java.io.File
+import com.squareup.picasso.Picasso
 
 
 class UserListAdapter(private val context: Context, private val arrayList: java.util.ArrayList<UserResponse>): BaseAdapter() {
@@ -38,19 +39,7 @@ class UserListAdapter(private val context: Context, private val arrayList: java.
         userImage = convertView.findViewById(R.id.userImage)
         username.text = " " + arrayList[position].username
 
-        Fuel.download("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${arrayList[position].id}")
-            .fileDestination { response, url -> File.createTempFile("user_${arrayList[position].id}", ".png", context.cacheDir) }
-            .progress { readBytes, totalBytes ->
-                val progress = readBytes.toFloat() / totalBytes.toFloat() * 100
-                println("Bytes downloaded $readBytes / $totalBytes ($progress %)")
-            }
-            .response { result -> }
-
-        val bmOptions = BitmapFactory.Options()
-        val image = File(context.cacheDir, "user_${arrayList[position].id}.png")
-        val bitmap = BitmapFactory.decodeFile(image.absolutePath, bmOptions)
-        userImage.setImageBitmap(bitmap)
-
+        Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${arrayList[position].id}").into(userImage)
 
         return convertView
     }
