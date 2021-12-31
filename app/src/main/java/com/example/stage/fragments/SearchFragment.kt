@@ -24,7 +24,12 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import responses.MovieResponse
 import responses.UserResponse
-import java.io.File
+import android.view.MotionEvent
+
+import android.view.View.OnTouchListener
+
+
+
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
@@ -134,17 +139,47 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 if (tab.position == 0) {
                     //movies tab selected
                     //movies.clear()
+                    searchBox.setText("");
                     listView.adapter = movieAdapter
                 }
                 else {
                     //users tab selected
                     //users.clear()
+                    searchBox.setText("");
                     listView.adapter = userAdapter
                 }
                 //search(tab.position, textBox.text.toString())
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
+        })
+
+        listView.setOnTouchListener(object : OnTouchListener {
+            var downX = 0
+            var upX = 0
+            override fun onTouch(v: View, event: MotionEvent): Boolean {
+                if (event.action == MotionEvent.ACTION_DOWN) {
+                    downX = event.x.toInt()
+                    return true
+                } else if (event.action == MotionEvent.ACTION_UP) {
+                    upX = event.x.toInt()
+                    if (upX - downX > 100) {
+                        searchBox.setText("")
+                        val tab = tabLayout.getTabAt(0)
+                        tab!!.select()
+                        listView.adapter = movieAdapter
+                        // swipe right
+                    } else if (downX - upX > 100) {
+                        searchBox.setText("")
+                        val tab = tabLayout.getTabAt(1)
+                        tab!!.select()
+                        listView.adapter = userAdapter
+                        // swipe left
+                    }
+                    return true
+                }
+                return false
+            }
         })
 
 
