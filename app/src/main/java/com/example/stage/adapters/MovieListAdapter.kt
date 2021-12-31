@@ -1,4 +1,4 @@
-package com.example.stage
+package com.example.stage.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.TextView
+import com.example.stage.R
 import responses.MovieResponse
 
 class MovieListAdapter(private val context: Context, private val arrayList: java.util.ArrayList<MovieResponse>): BaseAdapter() {

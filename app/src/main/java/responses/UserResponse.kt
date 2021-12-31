@@ -1,6 +1,5 @@
 package responses
 
-import com.example.stage.Movie
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.Gson
 

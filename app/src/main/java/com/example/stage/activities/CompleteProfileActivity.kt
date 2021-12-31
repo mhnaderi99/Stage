@@ -1,12 +1,14 @@
-package com.example.stage
+package com.example.stage.activities
 
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
+import com.example.stage.utilities.AppPreferences
+import com.example.stage.utilities.GlobalVariables
+import com.example.stage.R
 import com.github.kittinunf.fuel.Fuel
-import com.github.kittinunf.fuel.core.Headers
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import org.json.JSONObject
 import org.json.JSONTokener
@@ -67,7 +69,7 @@ class CompleteProfileActivity: AppCompatActivity() {
     }
 
     fun login(email: String, userid: String) {
-        val intent = Intent(this@CompleteProfileActivity,TimelineActivity::class.java)
+        val intent = Intent(this@CompleteProfileActivity, TimelineActivity::class.java)
         intent.putExtra("userId", userid)
         intent.putExtra("email", email)
         startActivity(intent)

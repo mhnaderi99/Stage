@@ -1,13 +1,14 @@
-package com.example.stage
+package com.example.stage.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ListView
 import androidx.fragment.app.Fragment
+import responses.Post
+import com.example.stage.R
+import com.example.stage.adapters.TimelineAdapter
 
 class TimelineFragment: Fragment(R.layout.fragment_timeline) {
 

@@ -5,8 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/darker"
-    android:backgroundTint="@color/darker"
-    tools:context=".MainActivity">
+    android:backgroundTint="@color/darker">
 
     <Button
         android:id="@+id/signup"

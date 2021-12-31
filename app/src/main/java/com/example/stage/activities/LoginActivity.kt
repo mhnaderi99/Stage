@@ -1,4 +1,4 @@
-package com.example.stage
+package com.example.stage.activities
 
 import android.content.Context
 import android.content.Intent
@@ -10,17 +10,13 @@ import android.text.TextUtils
 import android.util.Patterns
 import android.view.View
 import android.widget.EditText
+import com.example.stage.utilities.AppPreferences
+import com.example.stage.utilities.GlobalVariables
+import com.example.stage.R
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.jsonBody
-import com.github.kittinunf.fuel.httpGet
 import org.json.JSONObject
 import org.json.JSONTokener
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.net.URL
 
 
 class LoginActivity : AppCompatActivity() {
@@ -97,7 +93,8 @@ class LoginActivity : AppCompatActivity() {
                                             }
                                             else {
                                                 //hasn't registered
-                                                val intent = Intent(this@LoginActivity,CompleteProfileActivity::class.java)
+                                                val intent = Intent(this@LoginActivity,
+                                                    CompleteProfileActivity::class.java)
                                                 intent.putExtra("email", emailAddress)
                                                 startActivity(intent)
                                             }
@@ -154,7 +151,7 @@ class LoginActivity : AppCompatActivity() {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
 
     fun login(email: String, userid: String) {
-        val intent = Intent(this@LoginActivity,TimelineActivity::class.java)
+        val intent = Intent(this@LoginActivity, TimelineActivity::class.java)
         intent.putExtra("userId", userid)
         intent.putExtra("email", email)
         startActivity(intent)

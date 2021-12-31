@@ -1,8 +1,5 @@
-package com.example.stage
+package com.example.stage.fragments
 
-import android.content.Intent
-import com.github.kittinunf.fuel.httpGet
-import com.github.kittinunf.result.Result;
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -10,22 +7,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.Button
 import android.widget.EditText
 import android.widget.ListView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.stage.*
+import com.example.stage.adapters.MovieListAdapter
+import com.example.stage.adapters.UserListAdapter
+import com.example.stage.utilities.AppPreferences
+import com.example.stage.utilities.GlobalVariables
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.extensions.jsonBody
-import com.github.kittinunf.fuel.httpPost
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.json.JSONObject
-import org.json.JSONTokener
 import responses.MovieResponse
 import responses.UserResponse
 

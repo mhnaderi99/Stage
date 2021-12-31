@@ -1,4 +1,4 @@
-package com.example.stage
+package com.example.stage.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,8 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
+import responses.Post
+import com.example.stage.R
 
 class TimelineAdapter(private val context: Context, private val arrayList: java.util.ArrayList<Post>): BaseAdapter() {
 

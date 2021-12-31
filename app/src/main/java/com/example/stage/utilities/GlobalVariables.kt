@@ -1,4 +1,4 @@
-package com.example.stage
+package com.example.stage.utilities
 
 class GlobalVariables {
 
@@ -7,7 +7,8 @@ class GlobalVariables {
         val LOCAL_URL = "http://localhost:3030"
         val EMULATOR_URL = "http://10.0.2.2:3030"
 
-        fun getActiveURL(): String {return GLOBAL_URL}
+        fun getActiveURL(): String {return GLOBAL_URL
+        }
     }
 
 

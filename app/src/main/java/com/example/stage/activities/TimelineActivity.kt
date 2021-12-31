@@ -1,17 +1,19 @@
-package com.example.stage
+package com.example.stage.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.view.Menu
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ListView
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.example.stage.utilities.AppPreferences
+import responses.Post
+import com.example.stage.R
+import com.example.stage.adapters.TimelineAdapter
+import com.example.stage.fragments.ProfileFragment
+import com.example.stage.fragments.SearchFragment
+import com.example.stage.fragments.TimelineFragment
 import com.google.android.material.navigation.NavigationBarView
-import com.google.android.material.tabs.TabLayout
 
 class TimelineActivity: AppCompatActivity() {
 
@@ -40,9 +42,9 @@ class TimelineActivity: AppCompatActivity() {
 
             bottomNav.setOnItemSelectedListener {
                 when(it.itemId){
-                    R.id.page_home->setCurrentFragment(timelineFragment)
-                    R.id.page_search->setCurrentFragment(searchFragment)
-                    R.id.page_profile->setCurrentFragment(profileFragment)
+                    R.id.page_home ->setCurrentFragment(timelineFragment)
+                    R.id.page_search ->setCurrentFragment(searchFragment)
+                    R.id.page_profile ->setCurrentFragment(profileFragment)
 
                 }
                 true
@@ -54,7 +56,7 @@ class TimelineActivity: AppCompatActivity() {
 
     private fun logout() {
 
-        val intent = Intent(this@TimelineActivity,LoginActivity::class.java)
+        val intent = Intent(this@TimelineActivity, LoginActivity::class.java)
         AppPreferences.username = ""
         AppPreferences.password = ""
         AppPreferences.email = ""

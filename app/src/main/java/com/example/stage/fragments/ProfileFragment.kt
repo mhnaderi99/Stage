@@ -1,4 +1,4 @@
-package com.example.stage
+package com.example.stage.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,6 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import com.example.stage.utilities.AppPreferences
+import com.example.stage.activities.LoginActivity
+import com.example.stage.R
 
 class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
@@ -36,7 +39,7 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
 
     private fun logout() {
 
-        val intent = Intent(activity,LoginActivity::class.java)
+        val intent = Intent(activity, LoginActivity::class.java)
         AppPreferences.username = ""
         AppPreferences.password = ""
         AppPreferences.email = ""

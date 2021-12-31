@@ -1,4 +1,4 @@
-package com.example.stage
+package com.example.stage.utilities
 
 import android.content.Context
 import android.content.SharedPreferences

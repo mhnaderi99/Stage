@@ -3,7 +3,7 @@
     package="com.example.stage">
 
     <application
-        android:name="com.example.stage.Stage"
+        android:name="com.example.stage.app.Stage"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -12,19 +12,15 @@
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.Stage">
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.TimelineActivity"
             android:exported="false"
             android:label="@string/app_name" />
         <activity
-            android:name=".TimelineActivity"
+            android:name=".activities.CompleteProfileActivity"
             android:exported="false"
             android:label="@string/app_name" />
         <activity
-            android:name=".CompleteProfileActivity"
-            android:exported="false"
-            android:label="@string/app_name" />
-        <activity
-            android:name=".LoginActivity"
+            android:name=".activities.LoginActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
