@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="16dp"
-        android:layoutDirection="rtl"
+        android:layoutDirection="ltr"
         android:orientation="horizontal">
         <ImageView
             android:id="@+id/imageView"
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
             android:textColor="@color/light"
             android:text="Username" />
 
@@ -41,9 +41,9 @@
     <TextView
         android:layout_margin="16dp"
         android:textColor="@color/light"
-        android:gravity="right"
+        android:gravity="left"
         android:id="@+id/comment_textview"
-        android:textSize="4pt"
+        android:textSize="6pt"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="TextView" />

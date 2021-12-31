@@ -14,6 +14,16 @@ import com.example.stage.utilities.GlobalVariables
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import responses.CommentResponse
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
+
+import androidx.core.graphics.drawable.RoundedBitmapDrawable
+
+import android.graphics.drawable.BitmapDrawable
+
+import android.graphics.Bitmap
+
+
+
 
 class MovieCommentAdapter(private val context: Context, private val arrayList: java.util.ArrayList<CommentResponse>): BaseAdapter() {
 
@@ -39,12 +49,18 @@ class MovieCommentAdapter(private val context: Context, private val arrayList: j
         commentTextView.text = comment.comment_text
         usernameTextView.text = comment.username
 
-        Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${comment.username}")
+        Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${comment.user_id}")
             .placeholder(R.color.yellow)
             .error(R.drawable.user_image)
             .into(imageview, object : Callback {
                 override fun onSuccess() {
-                    println("success")
+                    val imageBitmap = (imageview.getDrawable() as BitmapDrawable).bitmap
+                    val imageDrawable =
+                        RoundedBitmapDrawableFactory.create(context.resources, imageBitmap)
+                    imageDrawable.isCircular = true
+                    imageDrawable.cornerRadius =
+                        Math.max(imageBitmap.width, imageBitmap.height) / 2.0f
+                    imageview.setImageDrawable(imageDrawable)
                 }
 
                 override fun onError(e: Exception?) {

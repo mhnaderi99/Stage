@@ -12,12 +12,16 @@ import androidx.fragment.app.Fragment
 import com.example.stage.R
 import com.example.stage.adapters.MovieCommentAdapter
 import com.example.stage.adapters.TimelineAdapter
+import com.example.stage.utilities.AppPreferences
 import com.example.stage.utilities.GlobalVariables
 import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.extensions.authentication
+import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import responses.CommentResponse
 import responses.MovieResponse
 
@@ -57,6 +61,7 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
         length = view.findViewById(R.id.length)
         var send = view.findViewById<Button>(R.id.send_btn)
         val imageView = view.findViewById<ImageView>(R.id.imageView2)
+        val textComment = view.findViewById<TextView>(R.id.comment_text)
 
         title1.text = movieResponse.title
         year.text = "year: " + movieResponse.year.toString()
@@ -77,6 +82,21 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
                 }
             })
 
+        send.setOnClickListener {
+            val json = JSONObject()
+            json.put("movieId", movieResponse.id)
+            json.put("commentText", textComment.text)
+            Fuel.post("$activeUrl/user/sendComment")
+                .authentication()
+                .basic(AppPreferences.email, AppPreferences.password)
+                .jsonBody(json.toString())
+                .response() { request, response, result ->
+                    println(result)
+                    fillCommentList()
+                }
+        }
+
+        fillCommentList()
 
         return view
     }
@@ -104,7 +124,7 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
                     comment?.forEach { cmt ->
                         comments.add(cmt)
                     }
-                    println()
+                    commentAdapter.notifyDataSetChanged()
                 }
         }
     }
