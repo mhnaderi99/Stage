@@ -12,6 +12,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="100dp"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="16dp">
         <ImageView
@@ -19,7 +20,7 @@
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginLeft="16dp"
-            android:src="@drawable/ic_launcher_background" />
+            android:src="@drawable/user_image" />
 
         <TextView
             android:textDirection="rtl"
@@ -30,6 +31,16 @@
             android:layout_weight="1"
             android:textColor="@color/light"
             android:textSize="10pt"/>
+        <Button
+            android:id="@+id/logout"
+            android:textSize="15sp"
+            android:textColor="@color/darker"
+            android:text="@string/logout"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
     </LinearLayout>
     <View
         android:id="@+id/divider2"

@@ -26,11 +26,6 @@ class TimelineFragment: Fragment(R.layout.fragment_timeline) {
 
         val view:View = inflater.inflate(R.layout.fragment_timeline, container, false)
         val listView: ListView = view.findViewById(R.id.posts)
-        val logoutButton: Button = view.findViewById(R.id.logout)
-
-        logoutButton.setOnClickListener {
-            logout()
-        }
 
         listView.adapter = activity?.let { TimelineAdapter(it, fillPostList()) }
 
@@ -38,16 +33,6 @@ class TimelineFragment: Fragment(R.layout.fragment_timeline) {
 
     }
 
-
-    private fun logout() {
-
-        val intent = Intent(activity,LoginActivity::class.java)
-        AppPreferences.username = ""
-        AppPreferences.password = ""
-        AppPreferences.email = ""
-        AppPreferences.isLogin = false
-        startActivity(intent)
-    }
 
     private fun fillPostList(): ArrayList<Post> {
 

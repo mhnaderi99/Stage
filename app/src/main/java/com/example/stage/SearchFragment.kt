@@ -136,9 +136,13 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position == 0) {
                     //movies tab selected
+                    //movies.clear()
+                    listView.adapter = movieAdapter
                 }
                 else {
                     //users tab selected
+                    //users.clear()
+                    listView.adapter = userAdapter
                 }
                 //search(tab.position, textBox.text.toString())
             }
