@@ -11,6 +11,7 @@ import com.example.stage.R
 import com.example.stage.adapters.MovieListAdapter
 import com.example.stage.adapters.TimelineAdapter
 import com.example.stage.adapters.UserListAdapter
+import com.example.stage.utilities.AppPreferences
 import com.example.stage.utilities.GlobalVariables
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
@@ -53,7 +54,9 @@ class TimelineFragment: Fragment(R.layout.fragment_timeline) {
     private fun fillCommentList() {
 
         GlobalScope.launch {
-            Fuel.get("$activeUrl/getAllComments")
+            Fuel.get("$activeUrl/user/getTimelineComments")
+                .authentication()
+                .basic(AppPreferences.email, AppPreferences.password)
                 .responseObject(CommentResponse.Deserializer()) { request, response, result ->
                     val (comment, err) = result
                     //Add to ArrayList
