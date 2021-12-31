@@ -65,10 +65,12 @@ class TimelineActivity: AppCompatActivity() {
         startActivity(intent)
     }
 
-    fun setCurrentFragment(fragment: Fragment)=
+    private fun setCurrentFragment(fragment: Fragment)=
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.flFragment,fragment)
+            addToBackStack("xyz")
             commit()
         }
+
 
 }
