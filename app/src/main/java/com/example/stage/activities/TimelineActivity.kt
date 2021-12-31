@@ -27,6 +27,7 @@ class TimelineActivity: AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setTheme(R.style.Theme_Stage)
         if (AppPreferences.isLogin) {
             setContentView(R.layout.activity_timeline)
 

@@ -15,6 +15,7 @@ import com.example.stage.utilities.GlobalVariables
 import com.example.stage.R
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.jsonBody
+import kotlinx.coroutines.delay
 import org.json.JSONObject
 import org.json.JSONTokener
 
@@ -32,6 +33,8 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Thread.sleep(1000)
+        setTheme(R.style.Theme_Stage)
 
         if (AppPreferences.isLogin) {
             println(AppPreferences.username)
@@ -40,7 +43,6 @@ class LoginActivity : AppCompatActivity() {
             login(AppPreferences.email, AppPreferences.password)
         } else {
             setContentView(R.layout.activity_login)
-
             submitEmail = findViewById(R.id.submitEmail)
             loginButton = findViewById(R.id.login)
             emailText = findViewById(R.id.emailAddress)
