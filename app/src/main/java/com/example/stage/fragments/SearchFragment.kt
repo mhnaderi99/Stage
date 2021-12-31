@@ -183,35 +183,35 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-
-        layout.setOnTouchListener(object : OnTouchListener {
-            var downX = 0
-            var upX = 0
-            override fun onTouch(v: View, event: MotionEvent): Boolean {
-                if (event.action == MotionEvent.ACTION_DOWN) {
-                    downX = event.x.toInt()
-                    return true
-                } else if (event.action == MotionEvent.ACTION_UP) {
-                    upX = event.x.toInt()
-                    if (upX - downX > 100) {
-                        searchBox.setText("")
-                        val tab = tabLayout.getTabAt(0)
-                        tab!!.select()
-                        listView.adapter = movieAdapter
-                        // swipe right
-                    } else if (downX - upX > 100) {
-                        searchBox.setText("")
-                        val tab = tabLayout.getTabAt(1)
-                        tab!!.select()
-                        listView.adapter = userAdapter
-                        // swipe left
-                    }
-                    return true
-                }
-                return false
-            }
-        })
-
+//
+//        layout.setOnTouchListener(object : OnTouchListener {
+//            var downX = 0
+//            var upX = 0
+//            override fun onTouch(v: View, event: MotionEvent): Boolean {
+//                if (event.action == MotionEvent.ACTION_DOWN) {
+//                    downX = event.x.toInt()
+//                    return true
+//                } else if (event.action == MotionEvent.ACTION_UP) {
+//                    upX = event.x.toInt()
+//                    if (upX - downX > 100) {
+//                        searchBox.setText("")
+//                        val tab = tabLayout.getTabAt(0)
+//                        tab!!.select()
+//                        listView.adapter = movieAdapter
+//                        // swipe right
+//                    } else if (downX - upX > 100) {
+//                        searchBox.setText("")
+//                        val tab = tabLayout.getTabAt(1)
+//                        tab!!.select()
+//                        listView.adapter = userAdapter
+//                        // swipe left
+//                    }
+//                    return true
+//                }
+//                return false
+//            }
+//        })
+//
 
         return view
 

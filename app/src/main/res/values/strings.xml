@@ -14,11 +14,12 @@
     <string name="invalid_username">Not a valid username</string>
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
-    <string name="enter_email">لطفا ایمیل خود را وارد کنید</string>
-    <string name="receive_otp">دریافت کد تایید</string>
-    <string name="enter_code">کد را وارد کنید</string>
-    <string name="login">ورود</string>
-    <string name="logout">خروج</string>
+    <string name="enter_email">please enter you email</string>
+    <string name="receive_otp">get activation code</string>
+    <string name="enter_code">enter activation code</string>
+    <string name="login">login</string>
+    <string name="logout">logout</string>
+    <string name="follow">follow</string>
 
     <string name="search_nav_title">Search</string>
     <string name="home_nav_title">Home</string>
