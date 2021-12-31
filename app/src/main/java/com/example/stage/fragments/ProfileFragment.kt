@@ -8,19 +8,45 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.stage.utilities.AppPreferences
 import com.example.stage.activities.LoginActivity
 import com.example.stage.R
+import com.example.stage.adapters.MovieListAdapter
+import com.example.stage.adapters.TimelineAdapter
+import com.example.stage.adapters.UserListAdapter
+import com.example.stage.adapters.userCommentAdapter
 import com.example.stage.utilities.GlobalVariables
+import com.github.kittinunf.fuel.Fuel
+import com.github.kittinunf.fuel.core.extensions.authentication
+import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import org.json.JSONObject
+import responses.CommentResponse
+import responses.MovieResponse
+import responses.UserResponse
 
 class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: String) : Fragment(R.layout.fragment_profile) {
 
+    private var activeUrl = GlobalVariables.getActiveURL()
+//    var followers: ArrayList<MovieResponse> = ArrayList()
+//    var followerAdapter: MovieListAdapter? = null
+//    var followings: ArrayList<UserResponse> = ArrayList()
+//    var followingAdapter: UserListAdapter? = null
+    var comments: ArrayList<CommentResponse> = ArrayList()
+    var commentsAdapter: userCommentAdapter? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+//        followerAdapter = activity?.let { MovieListAdapter(it, followers) }
+//        followingAdapter = activity?.let { UserListAdapter(it, followings) }
+        commentsAdapter = activity?.let { userCommentAdapter(it, comments) }
+
     }
 
     override fun onCreateView(
@@ -33,6 +59,7 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
         val userImage: ImageView = view.findViewById(R.id.userImage)
         val tabLayout: TabLayout = view.findViewById(R.id.profileTabLayout)
         val usernameLabel: TextView = view.findViewById(R.id.usernameLabel)
+        val listView: ListView = view.findViewById(R.id.profile_list)
 
         if (selfProfile) {
             Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${AppPreferences.password}").fit().centerCrop()
@@ -50,14 +77,32 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
             usernameLabel.text = username
         }
 
+        listView.adapter = commentsAdapter
+
+        GlobalScope.launch {
+            Fuel.get("$activeUrl/getUserComments?id=${userId}")
+                .responseObject(CommentResponse.Deserializer()) { request, response, result ->
+                    val (comment, err) = result
+                    //Add to ArrayList
+                    comments.clear()
+
+                    println(comment)
+                    comment?.forEach { cmt ->
+                        comments.add(cmt)
+                    }
+                }
+        }
+
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
 
                 println(tab.position)
                 when (tab.position) {
                     0 -> {
+                        listView.adapter = commentsAdapter
                     }
                     1 -> {
+
                     }
                     2 -> {
 

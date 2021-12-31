@@ -89,14 +89,14 @@
             android:layout_height="wrap_content"
             android:text="Following" />
     </com.google.android.material.tabs.TabLayout>
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/profile_comments"
+    <ListView
+        android:id="@+id/profile_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:layout_weight="1"
-        android:orientation="vertical"
-        >
-    </androidx.recyclerview.widget.RecyclerView>
-
+        android:layout_marginTop="20dp"
+        android:divider="@color/dark"
+        android:dividerHeight="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tabs"/>
 </LinearLayout>
