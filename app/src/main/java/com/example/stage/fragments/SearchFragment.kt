@@ -68,11 +68,15 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
             if (tabLayout.selectedTabPosition == 0) {
                 val selectedMovie = movies[position]
-                println(selectedMovie.toString())
+
+                val ft = requireFragmentManager().beginTransaction()
+                ft.replace(R.id.flFragment, MovieFragment(selectedMovie.id))
+                ft.addToBackStack("xyz");
+                ft.commit()
+
             }
             else {
                 val selectedUser = users[position]
-                println(selectedUser.toString())
 
                 val ft = requireFragmentManager().beginTransaction()
                 ft.replace(R.id.flFragment, ProfileFragment(false, selectedUser.id, selectedUser.username), "NewFragmentTag")
