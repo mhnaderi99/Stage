@@ -2,6 +2,8 @@ package com.example.stage.adapters
 
 import android.content.Context
 import android.graphics.BitmapFactory
+import android.icu.number.NumberFormatter.with
+import android.icu.number.NumberRangeFormatter.with
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -39,7 +41,10 @@ class UserListAdapter(private val context: Context, private val arrayList: java.
         userImage = convertView.findViewById(R.id.userImage)
         username.text = " " + arrayList[position].username
 
-        Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${arrayList[position].id}").into(userImage)
+        Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${arrayList[position].id}").fit().centerCrop()
+            .placeholder(R.color.yellow)
+            .error(R.drawable.user_image)
+            .into(userImage)
 
         return convertView
     }

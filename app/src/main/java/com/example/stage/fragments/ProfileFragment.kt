@@ -32,7 +32,10 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val userImage: ImageView = view.findViewById(R.id.userImage)
         val tabLayout: TabLayout = view.findViewById(R.id.profileTabLayout)
 
-        Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${AppPreferences.password}").into(userImage)
+        Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${AppPreferences.password}").fit().centerCrop()
+            .placeholder(R.color.yellow)
+            .error(R.drawable.user_image)
+            .into(userImage)
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {

@@ -9,8 +9,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import responses.Post
 import com.example.stage.R
+import com.example.stage.utilities.AppPreferences
+import com.example.stage.utilities.GlobalVariables
+import com.squareup.picasso.Callback
+import com.squareup.picasso.Picasso
+import responses.CommentResponse
 
-class TimelineAdapter(private val context: Context, private val arrayList: java.util.ArrayList<Post>): BaseAdapter() {
+class TimelineAdapter(private val context: Context, private val arrayList: java.util.ArrayList<CommentResponse>): BaseAdapter() {
 
     private lateinit var movieName: TextView
     private lateinit var username: TextView
@@ -35,10 +40,28 @@ class TimelineAdapter(private val context: Context, private val arrayList: java.
         comment = convertView.findViewById(R.id.comment)
         avatar = convertView.findViewById(R.id.avatar)
 
-        movieName.text = " " + arrayList[position].movieName
+        movieName.text = " " + arrayList[position].title
         username.text = " " + arrayList[position].username
-        comment.text = arrayList[position].comment
-        avatar.setBackgroundResource(arrayList[position].avatar)
+        comment.text = arrayList[position].comment_text
+
+        //Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadMovieImage?id=${arrayList[position].id}").into(avatar)
+
+        Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadMovieImage?id=${arrayList[position].id}")
+            .fit()
+            .centerCrop()
+            .placeholder(R.color.yellow)
+            .error(R.drawable.user_image)
+            .into(avatar, object : Callback {
+                override fun onSuccess() {
+                    println("success")
+                }
+
+                override fun onError(e: Exception?) {
+                    println(e?.message)
+                }
+            })
+
+
         return convertView
     }
 }
