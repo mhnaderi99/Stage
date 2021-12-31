@@ -27,8 +27,8 @@ import responses.UserResponse
 import android.view.MotionEvent
 
 import android.view.View.OnTouchListener
-
-
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
@@ -56,6 +56,20 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         val searchBox: EditText = view.findViewById(R.id.search_box)
         val tabLayout: TabLayout = view.findViewById(R.id.tabs)
         val listView: ListView = view.findViewById(R.id.search_list)
+        val layout: ConstraintLayout = view.findViewById(R.id.searchLayout)
+
+        listView.setOnItemClickListener { parent, view, position, id ->
+            if (tabLayout.selectedTabPosition == 0) {
+                val element = movieAdapter?.getItem(position) // The item that was clicked
+                print(element.toString())
+                //val intent = Intent(this, BookDetailActivity::class.java)
+                //startActivity(intent)
+            }
+            else {
+
+            }
+
+        }
 
         if (tabLayout.selectedTabPosition == 0) {
             listView.adapter = movieAdapter
@@ -154,7 +168,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
 
-        listView.setOnTouchListener(object : OnTouchListener {
+        layout.setOnTouchListener(object : OnTouchListener {
             var downX = 0
             var upX = 0
             override fun onTouch(v: View, event: MotionEvent): Boolean {
