@@ -83,7 +83,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         searchBox.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val username = AppPreferences.username
+                val username = AppPreferences.email
                 val password = AppPreferences.password
                 val json = JSONObject()
 

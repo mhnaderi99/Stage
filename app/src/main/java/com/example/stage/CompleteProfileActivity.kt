@@ -55,7 +55,8 @@ class CompleteProfileActivity: AppCompatActivity() {
                             }
 
                         AppPreferences.isLogin = true
-                        AppPreferences.username = emailAddress
+                        AppPreferences.email = emailAddress
+                        AppPreferences.username = username
                         AppPreferences.password = jsonResult.getInt("id").toString()
                         login(jsonResult.getString("email"), jsonResult.getInt("id").toString())
                     }

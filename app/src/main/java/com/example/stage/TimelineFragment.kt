@@ -44,6 +44,7 @@ class TimelineFragment: Fragment(R.layout.fragment_timeline) {
         val intent = Intent(activity,LoginActivity::class.java)
         AppPreferences.username = ""
         AppPreferences.password = ""
+        AppPreferences.email = ""
         AppPreferences.isLogin = false
         startActivity(intent)
     }

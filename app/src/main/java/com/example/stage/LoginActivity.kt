@@ -39,8 +39,9 @@ class LoginActivity : AppCompatActivity() {
 
         if (AppPreferences.isLogin) {
             println(AppPreferences.username)
+            println(AppPreferences.email)
             println(AppPreferences.password)
-            login(AppPreferences.username, AppPreferences.password)
+            login(AppPreferences.email, AppPreferences.password)
         } else {
             setContentView(R.layout.activity_login)
 
@@ -73,7 +74,8 @@ class LoginActivity : AppCompatActivity() {
                                             if (jsonResult.getBoolean("found")) {
                                                 //has already registered
                                                 val userId = jsonResult.getInt("id")
-                                                println(userId)
+                                                val userName = jsonResult.getString("username")
+                                                println(jsonResult)
 
                                                 val jjson = JSONObject()
                                                 jjson.put("email", emailAddress)
@@ -88,9 +90,10 @@ class LoginActivity : AppCompatActivity() {
                                                     }
 
                                                 AppPreferences.isLogin = true
-                                                AppPreferences.username = emailAddress
+                                                AppPreferences.email = emailAddress
+                                                AppPreferences.username = userName
                                                 AppPreferences.password = userId.toString()
-                                                login(AppPreferences.username, AppPreferences.password)
+                                                login(AppPreferences.email, AppPreferences.password)
                                             }
                                             else {
                                                 //hasn't registered

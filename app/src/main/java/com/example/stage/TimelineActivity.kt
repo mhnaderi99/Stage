@@ -57,6 +57,7 @@ class TimelineActivity: AppCompatActivity() {
         val intent = Intent(this@TimelineActivity,LoginActivity::class.java)
         AppPreferences.username = ""
         AppPreferences.password = ""
+        AppPreferences.email = ""
         AppPreferences.isLogin = false
         startActivity(intent)
     }
