@@ -32,9 +32,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.stage.activities.TimelineActivity
-
-
-
+import org.json.JSONTokener
 
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
@@ -78,10 +76,33 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             else {
                 val selectedUser = users[position]
 
-                val ft = requireFragmentManager().beginTransaction()
-                ft.replace(R.id.flFragment, ProfileFragment(false, selectedUser.id, selectedUser.username), "NewFragmentTag")
-                ft.addToBackStack("xyz");
-                ft.commit()
+                Fuel.get("$activeUrl/user/checkFollow?id=${selectedUser.id}")
+                    .authentication()
+                    .basic(AppPreferences.email, AppPreferences.password)
+                    .response { result ->
+                        val (bytes, error) = result
+                        if (bytes != null) {
+                            val res = String(bytes)
+                            val jsonResult = JSONTokener(res).nextValue() as JSONObject
+                            val followed = jsonResult.getInt("count") > 0
+
+                            if (followed) {
+                                val ft = requireFragmentManager().beginTransaction()
+                                ft.replace(R.id.flFragment, ProfileFragment(selectedUser.id.toString() == AppPreferences.password, selectedUser.id, selectedUser.username, true), "NewFragmentTag")
+                                ft.addToBackStack("xyz");
+                                ft.commit()
+
+                            } else {
+                                val ft = requireFragmentManager().beginTransaction()
+                                ft.replace(R.id.flFragment, ProfileFragment(selectedUser.id.toString() == AppPreferences.password, selectedUser.id, selectedUser.username, false), "NewFragmentTag")
+                                ft.addToBackStack("xyz");
+                                ft.commit()
+                            }
+
+                        }
+                    }
+
+
 
             }
 

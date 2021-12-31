@@ -70,6 +70,17 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
+        <Button
+            android:id="@+id/unfollow"
+            android:textSize="15sp"
+            android:textColor="@color/darker"
+            android:visibility="gone"
+            android:text="@string/unfollow"
+            android:layout_marginLeft="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
     </LinearLayout>
     <View
         android:id="@+id/divider2"

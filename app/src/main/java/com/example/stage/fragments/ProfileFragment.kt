@@ -27,11 +27,12 @@ import com.squareup.picasso.Picasso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import org.json.JSONTokener
 import responses.CommentResponse
 import responses.MovieResponse
 import responses.UserResponse
 
-class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: String) : Fragment(R.layout.fragment_profile) {
+class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: String, var followed: Boolean) : Fragment(R.layout.fragment_profile) {
 
     private var activeUrl = GlobalVariables.getActiveURL()
     var followers: ArrayList<UserResponse> = ArrayList()
@@ -57,6 +58,7 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
         val logoutButton: Button = view.findViewById(R.id.logout)
         val followButton: Button = view.findViewById(R.id.follow)
+        val unfollowButton: Button = view.findViewById(R.id.unfollow)
         val userImage: ImageView = view.findViewById(R.id.userImage)
         val tabLayout: TabLayout = view.findViewById(R.id.profileTabLayout)
         val usernameLabel: TextView = view.findViewById(R.id.usernameLabel)
@@ -65,6 +67,7 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
         if (selfProfile) {
             logoutButton.visibility = View.VISIBLE
             followButton.visibility = View.GONE
+            unfollowButton.visibility = View.GONE
             Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${AppPreferences.password}").fit().centerCrop()
                 .placeholder(R.color.yellow)
                 .error(R.drawable.user_image)
@@ -73,7 +76,15 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
 
         } else {
             logoutButton.visibility = View.GONE
-            followButton.visibility = View.VISIBLE
+            if (followed) {
+                followButton.visibility = View.GONE
+                unfollowButton.visibility = View.VISIBLE
+            } else {
+                unfollowButton.visibility = View.GONE
+                followButton.visibility = View.VISIBLE
+            }
+
+
             Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${userId}").fit().centerCrop()
                 .placeholder(R.color.yellow)
                 .error(R.drawable.user_image)
@@ -143,6 +154,30 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
 
         logoutButton.setOnClickListener {
             logout()
+        }
+
+        followButton.setOnClickListener {
+            Fuel.post("$activeUrl/user/follow?id=${userId}")
+                .authentication()
+                .basic(AppPreferences.email, AppPreferences.password)
+                .response() { request, response, result ->
+                    println(result)
+                    //this.followed = true
+                    //followButton.visibility = View.GONE
+                    //unfollowButton.visibility = View.VISIBLE
+                }
+        }
+
+        unfollowButton.setOnClickListener {
+            Fuel.post("$activeUrl/user/unfollow?id=${userId}")
+                .authentication()
+                .basic(AppPreferences.email, AppPreferences.password)
+                .response() { request, response, result ->
+                    println(result)
+                    //this.followed = false
+                    //unfollowButton.visibility = View.GONE
+                    //followButton.visibility = View.VISIBLE
+                }
         }
 
         return view
