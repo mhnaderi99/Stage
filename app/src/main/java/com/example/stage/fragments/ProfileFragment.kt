@@ -103,6 +103,17 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
                 println(tab.position)
                 when (tab.position) {
                     0 -> {
+                        Fuel.get("$activeUrl/getUserComments?id=${userId}")
+                            .responseObject(CommentResponse.Deserializer()) { request, response, result ->
+                                val (comment, err) = result
+                                //Add to ArrayList
+                                comments.clear()
+
+                                println(comment)
+                                comment?.forEach { cmt ->
+                                    comments.add(cmt)
+                                }
+                            }
                         listView.adapter = commentsAdapter
                     }
                     1 -> {
@@ -143,6 +154,10 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
 
         logoutButton.setOnClickListener {
             logout()
+        }
+
+        followButton.setOnClickListener {
+
         }
 
         return view
