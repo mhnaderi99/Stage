@@ -29,6 +29,12 @@ import android.view.MotionEvent
 import android.view.View.OnTouchListener
 import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
+import com.example.stage.activities.TimelineActivity
+
+
+
 
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
@@ -59,13 +65,19 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         val layout: ConstraintLayout = view.findViewById(R.id.searchLayout)
 
         listView.setOnItemClickListener { parent, view, position, id ->
+
             if (tabLayout.selectedTabPosition == 0) {
-                val element = movieAdapter?.getItem(position) // The item that was clicked
-                print(element.toString())
-                //val intent = Intent(this, BookDetailActivity::class.java)
-                //startActivity(intent)
+                val selectedMovie = movies[position]
+                println(selectedMovie.toString())
             }
             else {
+                val selectedUser = users[position]
+                println(selectedUser.toString())
+
+                val ft = requireFragmentManager().beginTransaction()
+                ft.replace(R.id.flFragment, ProfileFragment(false, selectedUser.id, selectedUser.username), "NewFragmentTag")
+                ft.addToBackStack("xyz");
+                ft.commit()
 
             }
 

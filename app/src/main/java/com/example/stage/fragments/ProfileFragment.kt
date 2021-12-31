@@ -1,6 +1,7 @@
 package com.example.stage.fragments
 
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -16,7 +17,7 @@ import com.example.stage.utilities.GlobalVariables
 import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 
-class ProfileFragment : Fragment(R.layout.fragment_profile) {
+class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: String) : Fragment(R.layout.fragment_profile) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +32,23 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         val logoutButton: Button = view.findViewById(R.id.logout)
         val userImage: ImageView = view.findViewById(R.id.userImage)
         val tabLayout: TabLayout = view.findViewById(R.id.profileTabLayout)
+        val usernameLabel: TextView = view.findViewById(R.id.usernameLabel)
 
-        Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${AppPreferences.password}").fit().centerCrop()
-            .placeholder(R.color.yellow)
-            .error(R.drawable.user_image)
-            .into(userImage)
+        if (selfProfile) {
+            Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${AppPreferences.password}").fit().centerCrop()
+                .placeholder(R.color.yellow)
+                .error(R.drawable.user_image)
+                .into(userImage)
+            usernameLabel.text = AppPreferences.username
+
+        } else {
+            logoutButton.visibility = View.GONE
+            Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${userId}").fit().centerCrop()
+                .placeholder(R.color.yellow)
+                .error(R.drawable.user_image)
+                .into(userImage)
+            usernameLabel.text = username
+        }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
@@ -58,10 +71,6 @@ class ProfileFragment : Fragment(R.layout.fragment_profile) {
         logoutButton.setOnClickListener {
             logout()
         }
-
-        val usernameLabel: TextView = view.findViewById(R.id.usernameLabel)
-
-        usernameLabel.text = AppPreferences.username
 
         return view
     }

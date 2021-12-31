@@ -37,7 +37,7 @@ class TimelineActivity: AppCompatActivity() {
 
             val timelineFragment = TimelineFragment()
             val searchFragment = SearchFragment()
-            val profileFragment = ProfileFragment()
+            val profileFragment = ProfileFragment(true, AppPreferences.password.toInt(), AppPreferences.username)
 
             setCurrentFragment(timelineFragment)
 
@@ -65,7 +65,7 @@ class TimelineActivity: AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun setCurrentFragment(fragment: Fragment)=
+    fun setCurrentFragment(fragment: Fragment)=
         supportFragmentManager.beginTransaction().apply {
             replace(R.id.flFragment,fragment)
             commit()
