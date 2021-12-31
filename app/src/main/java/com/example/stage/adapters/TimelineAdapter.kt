@@ -47,8 +47,6 @@ class TimelineAdapter(private val context: Context, private val arrayList: java.
         //Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadMovieImage?id=${arrayList[position].id}").into(avatar)
 
         Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadMovieImage?id=${arrayList[position].id}")
-            .fit()
-            .centerCrop()
             .placeholder(R.color.yellow)
             .error(R.drawable.user_image)
             .into(avatar, object : Callback {
