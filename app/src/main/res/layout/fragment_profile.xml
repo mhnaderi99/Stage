@@ -49,6 +49,7 @@
         android:background="?android:attr/listDivider" />
 
     <com.google.android.material.tabs.TabLayout
+        android:id="@+id/profileTabLayout"
         android:layout_width="match_parent"
         app:tabSelectedTextColor="@color/yellow"
         app:tabTextColor="@color/light"

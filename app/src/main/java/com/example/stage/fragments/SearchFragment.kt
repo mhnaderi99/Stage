@@ -101,6 +101,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                                 movie?.forEach { mv ->
                                     movies.add(mv)
                                 }
+
                             }
                     }
                     else {
