@@ -6,11 +6,15 @@ import com.google.gson.Gson
 data class MovieResponse(
     val id: Int,
     val title: String,
-    val category_id: Int,
     val director: String,
-    val year: Number) {
+    val year: Number,
+    val summary: String,
+    val length: Number,
+    val category: String,
+) {
 
-    class Deserializer: ResponseDeserializable<Array<MovieResponse>> {
-        override fun deserialize(content: String): Array<MovieResponse>? = Gson().fromJson(content, Array<MovieResponse>::class.java)
+    class Deserializer : ResponseDeserializable<Array<MovieResponse>> {
+        override fun deserialize(content: String): Array<MovieResponse>? =
+            Gson().fromJson(content, Array<MovieResponse>::class.java)
     }
 }

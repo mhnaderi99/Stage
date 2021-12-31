@@ -27,7 +27,6 @@ import responses.UserResponse
 import android.view.MotionEvent
 
 import android.view.View.OnTouchListener
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
@@ -46,7 +45,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        movieAdapter = activity?.let { MovieListAdapter(it, movies) }
+        movieAdapter = activity?.let { MovieListAdapter(it, movies, requireFragmentManager()) }
         userAdapter = activity?.let { UserListAdapter(it, users) }
     }
 
@@ -68,7 +67,7 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                 val selectedMovie = movies[position]
 
                 val ft = requireFragmentManager().beginTransaction()
-                ft.replace(R.id.flFragment, MovieFragment(selectedMovie.id))
+                ft.replace(R.id.flFragment, MovieFragment(selectedMovie))
                 ft.addToBackStack("xyz");
                 ft.commit()
 
@@ -120,7 +119,12 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
                 if (tabLayout.selectedTabPosition == 0) {
                     //movies search
-                    movieAdapter = activity?.let { MovieListAdapter(it, movies) }
+                    var movieList=movies
+                    movieAdapter = activity?.let { MovieListAdapter(
+                        it,
+                        movieList,
+                        requireFragmentManager()
+                    ) }
                     listView.adapter = movieAdapter
                 } else {
                     //users search

@@ -7,7 +7,8 @@ data class CommentResponse(
     val id: Int,
     val title: String,
     val username: String,
-    val comment_text: String
+    val comment_text: String,
+    val user_id: Int
 ) {
 
     class Deserializer: ResponseDeserializable<Array<CommentResponse>> {
