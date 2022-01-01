@@ -14,6 +14,8 @@ import com.example.stage.adapters.MovieCommentAdapter
 import com.example.stage.adapters.TimelineAdapter
 import com.example.stage.utilities.AppPreferences
 import com.example.stage.utilities.GlobalVariables
+import com.example.stage.utilities.Utilities
+import com.example.stage.utilities.Utilities.Companion.hideKeyboard
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.extensions.jsonBody
@@ -83,9 +85,12 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
             })
 
         send.setOnClickListener {
+            val comment = textComment.text
+            textComment.text = ""
+            hideKeyboard()
             val json = JSONObject()
             json.put("movieId", movieResponse.id)
-            json.put("commentText", textComment.text)
+            json.put("commentText", comment)
             Fuel.post("$activeUrl/user/sendComment")
                 .authentication()
                 .basic(AppPreferences.email, AppPreferences.password)
@@ -124,7 +129,7 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
                     comment?.forEach { cmt ->
                         comments.add(cmt)
                     }
-                    commentAdapter.notifyDataSetChanged()
+                    //commentAdapter.notifyDataSetChanged()
                 }
         }
     }

@@ -17,6 +17,7 @@ import com.google.android.material.navigation.NavigationBarView
 
 class TimelineActivity: AppCompatActivity() {
 
+    private var currentFragment: Int = 0
     private lateinit var listView: ListView
     private lateinit var logoutButton: Button
     private lateinit var bottomNav: NavigationBarView
@@ -39,13 +40,22 @@ class TimelineActivity: AppCompatActivity() {
             val searchFragment = SearchFragment()
             val profileFragment = ProfileFragment(true, AppPreferences.password.toInt(), AppPreferences.username, false)
 
-            setCurrentFragment(timelineFragment)
+            setCurrentFragment(timelineFragment, 0)
 
             bottomNav.setOnItemSelectedListener {
                 when(it.itemId){
-                    R.id.page_home ->setCurrentFragment(timelineFragment)
-                    R.id.page_search ->setCurrentFragment(searchFragment)
-                    R.id.page_profile ->setCurrentFragment(profileFragment)
+                    R.id.page_home ->{
+                        setCurrentFragment(timelineFragment, 0-currentFragment)
+                        currentFragment = 0
+                    }
+                    R.id.page_search -> {
+                        setCurrentFragment(searchFragment, 1-currentFragment)
+                        currentFragment = 1
+                    }
+                    R.id.page_profile -> {
+                        setCurrentFragment(profileFragment, 2-currentFragment)
+                        currentFragment = 2
+                    }
 
                 }
                 true
@@ -65,12 +75,53 @@ class TimelineActivity: AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun setCurrentFragment(fragment: Fragment)=
-        supportFragmentManager.beginTransaction().apply {
-            replace(R.id.flFragment,fragment)
-            addToBackStack("xyz")
-            commit()
+    private fun setCurrentFragment(fragment: Fragment, direction: Int)=
+        when(direction) {
+            -2 -> {
+                supportFragmentManager.beginTransaction().apply {
+                    setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
+                    replace(R.id.flFragment,fragment)
+                    addToBackStack("xyz")
+                    commit()
+                }
+            }
+            -1 -> {
+                supportFragmentManager.beginTransaction().apply {
+                    setCustomAnimations(R.anim.slide_in_left, R.anim.slide_out_right)
+                    replace(R.id.flFragment,fragment)
+                    addToBackStack("xyz")
+                    commit()
+                }
+
+            }
+            0 -> {
+                supportFragmentManager.beginTransaction().apply {
+                    replace(R.id.flFragment,fragment)
+                    addToBackStack("xyz")
+                    commit()
+                }
+            }
+            1 -> {
+                supportFragmentManager.beginTransaction().apply {
+                    setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+                    replace(R.id.flFragment,fragment)
+                    addToBackStack("xyz")
+                    commit()
+                }
+            }
+            2 -> {
+                supportFragmentManager.beginTransaction().apply {
+                    setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left)
+                    replace(R.id.flFragment,fragment)
+                    addToBackStack("xyz")
+                    commit()
+                }
+            }
+            else -> {
+                null
+            }
         }
+
 
 
 }
