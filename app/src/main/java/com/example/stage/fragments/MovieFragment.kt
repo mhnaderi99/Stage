@@ -39,7 +39,7 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
     private var activeUrl = GlobalVariables.getActiveURL()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        fillCommentList()
+        //fillCommentList()
     }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -66,10 +66,10 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
         val textComment = view.findViewById<TextView>(R.id.comment_text)
 
         title1.text = movieResponse.title
-        year.text = "year: " + movieResponse.year.toString()
-        genre.text = "genre: "+movieResponse.category
-        summary.text = "summary: "+movieResponse.summary
-        length.text = "duration: $lenStr"
+        year.text = "Year: " + movieResponse.year.toString()
+        genre.text = "Genre: "+movieResponse.category
+        summary.text = "Summary: "+movieResponse.summary
+        length.text = "Duration: $lenStr"
 
         Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadMovieImage?id=${movieResponse.id}")
             .placeholder(R.color.yellow)
@@ -86,19 +86,22 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
 
         send.setOnClickListener {
             val comment = textComment.text
-            textComment.text = ""
-            hideKeyboard()
-            val json = JSONObject()
-            json.put("movieId", movieResponse.id)
-            json.put("commentText", comment)
-            Fuel.post("$activeUrl/user/sendComment")
-                .authentication()
-                .basic(AppPreferences.email, AppPreferences.password)
-                .jsonBody(json.toString())
-                .response() { request, response, result ->
-                    println(result)
-                    fillCommentList()
-                }
+            if (! comment.toString().isEmpty()) {
+                textComment.text = ""
+                hideKeyboard()
+                val json = JSONObject()
+                json.put("movieId", movieResponse.id)
+                json.put("commentText", comment)
+                Fuel.post("$activeUrl/user/sendComment")
+                    .authentication()
+                    .basic(AppPreferences.email, AppPreferences.password)
+                    .jsonBody(json.toString())
+                    .response() { request, response, result ->
+                        println(result)
+                        commentAdapter.notifyDataSetChanged()
+                        //fillCommentList()
+                    }
+            }
         }
 
         fillCommentList()
@@ -119,7 +122,7 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
     }
     private fun fillCommentList() {
         val movie_id=movieResponse.id
-        GlobalScope.launch {
+        //GlobalScope.launch {
             Fuel.get("$activeUrl/getMovieComments?id=$movie_id")
                 .responseObject(CommentResponse.Deserializer()) { request, response, result ->
                     val (comment, err) = result
@@ -128,9 +131,9 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
 
                     comment?.forEach { cmt ->
                         comments.add(cmt)
+                        //commentAdapter.notifyDataSetChanged()
                     }
-                    //commentAdapter.notifyDataSetChanged()
                 }
-        }
+        //}
     }
 }
