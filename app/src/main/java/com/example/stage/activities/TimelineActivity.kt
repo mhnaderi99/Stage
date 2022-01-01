@@ -7,9 +7,7 @@ import android.widget.ListView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.stage.utilities.AppPreferences
-import responses.Post
 import com.example.stage.R
-import com.example.stage.adapters.TimelineAdapter
 import com.example.stage.fragments.ProfileFragment
 import com.example.stage.fragments.SearchFragment
 import com.example.stage.fragments.TimelineFragment
@@ -22,8 +20,6 @@ class TimelineActivity: AppCompatActivity() {
     private lateinit var logoutButton: Button
     private lateinit var bottomNav: NavigationBarView
 
-    var postList: ArrayList<Post> = ArrayList()
-    var postAdapter: TimelineAdapter? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

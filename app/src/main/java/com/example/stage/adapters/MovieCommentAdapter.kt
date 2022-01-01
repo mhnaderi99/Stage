@@ -7,22 +7,14 @@ import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import responses.Post
 import com.example.stage.R
-import com.example.stage.utilities.AppPreferences
 import com.example.stage.utilities.GlobalVariables
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import responses.CommentResponse
 import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 
-import androidx.core.graphics.drawable.RoundedBitmapDrawable
-
 import android.graphics.drawable.BitmapDrawable
-
-import android.graphics.Bitmap
-
-
 
 
 class MovieCommentAdapter(private val context: Context, private val arrayList: java.util.ArrayList<CommentResponse>): BaseAdapter() {

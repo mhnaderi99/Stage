@@ -4,35 +4,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ListView
 import androidx.fragment.app.Fragment
-import responses.Post
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.stage.R
-import com.example.stage.adapters.MovieListAdapter
-import com.example.stage.adapters.TimelineAdapter
-import com.example.stage.adapters.UserListAdapter
+import com.example.stage.adapters.TimelinePostAdapter
 import com.example.stage.utilities.AppPreferences
 import com.example.stage.utilities.GlobalVariables
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
-import com.github.kittinunf.fuel.core.extensions.jsonBody
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import responses.CommentResponse
-import responses.MovieResponse
-import responses.UserResponse
 
-class TimelineFragment: Fragment(R.layout.fragment_timeline) {
+
+
+
+class TimelineFragment : Fragment(R.layout.fragment_timeline) {
 
     private var activeUrl = GlobalVariables.getActiveURL()
-    var comments: ArrayList<CommentResponse> = ArrayList()
-    var commentAdapter: TimelineAdapter? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        fillCommentList()
-    }
+    lateinit var linearLayoutManager: LinearLayoutManager
+    lateinit var commentAdapter: TimelinePostAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -40,32 +30,35 @@ class TimelineFragment: Fragment(R.layout.fragment_timeline) {
         savedInstanceState: Bundle?
     ): View? {
 
-        val view:View = inflater.inflate(R.layout.fragment_timeline, container, false)
-        val listView: ListView = view.findViewById(R.id.posts)
+        fetchComments()
+        val view: View = inflater.inflate(R.layout.fragment_timeline, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
 
-        commentAdapter = activity?.let { TimelineAdapter(it, comments) }
-        listView.adapter = commentAdapter
-
+        commentAdapter = TimelinePostAdapter(ArrayList())
+        linearLayoutManager = LinearLayoutManager(view.context)
+        recyclerView.layoutManager = linearLayoutManager
+        recyclerView.adapter = commentAdapter
         return view
 
     }
 
 
-    private fun fillCommentList() {
+    private fun fetchComments(){
 
-        GlobalScope.launch {
-            Fuel.get("$activeUrl/user/getTimelineComments")
-                .authentication()
-                .basic(AppPreferences.email, AppPreferences.password)
-                .responseObject(CommentResponse.Deserializer()) { request, response, result ->
-                    val (comment, err) = result
-                    //Add to ArrayList
-                    comments.clear()
-
-                    comment?.forEach { cmt ->
-                        comments.add(cmt)
-                    }
+        var temp: ArrayList<CommentResponse> = ArrayList()
+        Fuel.get("$activeUrl/user/getTimelineComments")
+            .authentication()
+            .basic(AppPreferences.email, AppPreferences.password)
+            .responseObject(CommentResponse.Deserializer()) { request, response, result ->
+                val (comment, err) = result
+                comment?.forEach { cmt ->
+                    temp.add(cmt)
                 }
-        }
+                println(temp)
+
+                activity?.runOnUiThread(java.lang.Runnable {
+                    commentAdapter.update(temp)
+                })
+            }
     }
 }

@@ -1,53 +1,50 @@
 package com.example.stage.fragments
 
+import android.content.Context
+import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.inputmethod.EditorInfo
 import android.widget.EditText
-import android.widget.ListView
+import android.widget.LinearLayout
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.example.stage.*
-import com.example.stage.adapters.MovieListAdapter
-import com.example.stage.adapters.UserListAdapter
 import com.example.stage.utilities.AppPreferences
 import com.example.stage.utilities.GlobalVariables
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.google.android.material.tabs.TabLayout
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.json.JSONObject
 import responses.MovieResponse
 import responses.UserResponse
-import android.view.MotionEvent
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.stage.adapters.*
+import androidx.recyclerview.widget.DividerItemDecoration
+import android.widget.Toast
 
-import android.view.View.OnTouchListener
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
-import com.example.stage.activities.TimelineActivity
-import org.json.JSONTokener
+import android.view.View.OnFocusChangeListener
+import android.view.ViewTreeObserver
+import android.view.ViewTreeObserver.OnGlobalLayoutListener
+import android.view.inputmethod.EditorInfo
+import android.widget.ImageButton
+import com.example.stage.utilities.Utilities.Companion.hideKeyboard
 
 
 class SearchFragment : Fragment(R.layout.fragment_search) {
 
-    private var activeUrl = GlobalVariables.getActiveURL()
-    var movies: ArrayList<MovieResponse> = ArrayList()
-    var movieAdapter: MovieListAdapter? = null
-    var users: ArrayList<UserResponse> = ArrayList()
-    var userAdapter: UserListAdapter? = null
 
+    lateinit var linearLayoutManager: LinearLayoutManager
+    lateinit var movieSearchAdapter: MovieSearchAdapter
+    lateinit var userSearchAdapter: UserSearchAdapter
+    lateinit var layout: ConstraintLayout
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        movieAdapter = activity?.let { MovieListAdapter(it, movies, requireFragmentManager()) }
-        userAdapter = activity?.let { UserListAdapter(it, users) }
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,83 +52,56 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         savedInstanceState: Bundle?
     ): View? {
 
+        //fetchComments()
         val view: View = inflater.inflate(R.layout.fragment_search, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.search_movie_list)
+        movieSearchAdapter = MovieSearchAdapter(ArrayList())
+        userSearchAdapter = UserSearchAdapter(ArrayList())
+        layout = view.findViewById(R.id.searchLayout)
+        linearLayoutManager = LinearLayoutManager(view.context)
+        recyclerView.layoutManager = linearLayoutManager
+
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+
         val searchBox: EditText = view.findViewById(R.id.search_box)
+        val backButton: ImageButton = view.findViewById(R.id.backButton)
         val tabLayout: TabLayout = view.findViewById(R.id.tabs)
-        val listView: ListView = view.findViewById(R.id.search_list)
-        val layout: ConstraintLayout = view.findViewById(R.id.searchLayout)
-
-        listView.setOnItemClickListener { parent, view, position, id ->
-
-            if (tabLayout.selectedTabPosition == 0) {
-                val selectedMovie = movies[position]
-
-                val ft = requireFragmentManager().beginTransaction()
-                ft.replace(R.id.flFragment, MovieFragment(selectedMovie))
-                ft.addToBackStack("xyz");
-                ft.commit()
-
-            }
-            else {
-                val selectedUser = users[position]
-
-                Fuel.get("$activeUrl/user/checkFollow?id=${selectedUser.id}")
-                    .authentication()
-                    .basic(AppPreferences.email, AppPreferences.password)
-                    .response { result ->
-                        val (bytes, error) = result
-                        if (bytes != null) {
-                            val res = String(bytes)
-                            val jsonResult = JSONTokener(res).nextValue() as JSONObject
-                            val followed = jsonResult.getInt("count") > 0
-
-                            if (followed) {
-                                val ft = requireFragmentManager().beginTransaction()
-                                ft.replace(R.id.flFragment, ProfileFragment(selectedUser.id.toString() == AppPreferences.password, selectedUser.id, selectedUser.username, true), "NewFragmentTag")
-                                ft.addToBackStack("xyz");
-                                ft.commit()
-
-                            } else {
-                                val ft = requireFragmentManager().beginTransaction()
-                                ft.replace(R.id.flFragment, ProfileFragment(selectedUser.id.toString() == AppPreferences.password, selectedUser.id, selectedUser.username, false), "NewFragmentTag")
-                                ft.addToBackStack("xyz");
-                                ft.commit()
-                            }
-
-                        }
-                    }
-
-
-
-            }
-
-        }
 
         if (tabLayout.selectedTabPosition == 0) {
-            listView.adapter = movieAdapter
-        }
-        else {
-            listView.adapter = userAdapter
+            recyclerView.adapter = movieSearchAdapter
+        } else {
+            recyclerView.adapter = userSearchAdapter
         }
 
+        backButton.setOnClickListener {
+            hideKeyboard()
+        }
+
+        view.viewTreeObserver.addOnGlobalLayoutListener {
+            val r = Rect()
+            //r will be populated with the coordinates of your view that area still visible.
+            view.getWindowVisibleDisplayFrame(r)
+            val heightDiff: Int = view.rootView.height - (r.bottom - r.top)
+            if (heightDiff > 500) { // if more than 100 pixels, its probably a keyboard...
+                // keyboard is opened
+                println("Keyboard")
+                backButton.visibility = View.VISIBLE
+
+            } else {
+                // keyboard is closed
+                println("No")
+                backButton.visibility = View.GONE
+            }
+        }
 
         searchBox.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                if (tabLayout.selectedTabPosition == 0) {
-                    //movies search
-                    var movieList=movies
-                    movieAdapter = activity?.let { MovieListAdapter(
-                        it,
-                        movieList,
-                        requireFragmentManager()
-                    ) }
-                    listView.adapter = movieAdapter
-                } else {
-                    //users search
-                    userAdapter = activity?.let { UserListAdapter(it, users) }
-                    listView.adapter = userAdapter
-                }
-
+                hideKeyboard()
                 true
             } else {
                 false
@@ -140,50 +110,26 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         searchBox.addTextChangedListener(object : TextWatcher {
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
-                val username = AppPreferences.email
-                val password = AppPreferences.password
-                val json = JSONObject()
 
-                GlobalScope.launch {
-                    json.put("searchTerm", searchBox.text.toString())
-                    println(json)
-                    if (tabLayout.selectedTabPosition == 0) {
-                        Fuel.post("$activeUrl/user/searchMovies")
-                            .authentication()
-                            .basic(username, password)
-                            .jsonBody(json.toString())
-                            .also { print(it) }
-                            .responseObject(MovieResponse.Deserializer()) { request, response, result ->
-                                val (movie, err) = result
-                                //Add to ArrayList
-                                movies.clear()
-
-                                movie?.forEach { mv ->
-                                    movies.add(mv)
-                                }
-
-                            }
+                val searchTerm = searchBox.text.toString()
+                if (tabLayout.selectedTabPosition == 0) {
+                    if(! searchTerm.isEmpty()) {
+                        fetchMovies(searchTerm)
+                    } else {
+                        movieSearchAdapter.update(ArrayList())
                     }
-                    else {
-                        Fuel.post("$activeUrl/user/searchUsers")
-                            .authentication()
-                            .basic(username, password)
-                            .jsonBody(json.toString())
-                            .responseObject(UserResponse.Deserializer()) { request, response, result ->
-                                val (user, err) = result
-                                //Add to ArrayList
-                                users.clear()
-
-                                user?.forEach { usr ->
-                                    users.add(usr)
-                                }
-
-                            }
+                } else {
+                    if(! searchTerm.isEmpty()) {
+                        fetchUsers(searchTerm)
+                    } else {
+                        userSearchAdapter.update(ArrayList())
                     }
-
 
                 }
+
+
             }
+
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable) {}
         })
@@ -193,53 +139,80 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
             override fun onTabSelected(tab: TabLayout.Tab) {
                 if (tab.position == 0) {
                     //movies tab selected
-                    //movies.clear()
-                    searchBox.setText("");
-                    listView.adapter = movieAdapter
-                }
-                else {
+                    //searchBox.setText("");
+                    recyclerView.adapter = movieSearchAdapter
+                    searchBox.hint = "Search movies"
+                } else {
                     //users tab selected
-                    //users.clear()
-                    searchBox.setText("");
-                    listView.adapter = userAdapter
+                    //searchBox.setText("");
+                    recyclerView.adapter = userSearchAdapter
+                    searchBox.hint = "Search users"
                 }
-                //search(tab.position, textBox.text.toString())
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
-//
-//        layout.setOnTouchListener(object : OnTouchListener {
-//            var downX = 0
-//            var upX = 0
-//            override fun onTouch(v: View, event: MotionEvent): Boolean {
-//                if (event.action == MotionEvent.ACTION_DOWN) {
-//                    downX = event.x.toInt()
-//                    return true
-//                } else if (event.action == MotionEvent.ACTION_UP) {
-//                    upX = event.x.toInt()
-//                    if (upX - downX > 100) {
-//                        searchBox.setText("")
-//                        val tab = tabLayout.getTabAt(0)
-//                        tab!!.select()
-//                        listView.adapter = movieAdapter
-//                        // swipe right
-//                    } else if (downX - upX > 100) {
-//                        searchBox.setText("")
-//                        val tab = tabLayout.getTabAt(1)
-//                        tab!!.select()
-//                        listView.adapter = userAdapter
-//                        // swipe left
-//                    }
-//                    return true
-//                }
-//                return false
-//            }
-//        })
-//
 
         return view
 
     }
+
+
+    private fun fetchMovies(searchTerm: String) {
+
+        var temp: ArrayList<MovieResponse> = ArrayList()
+        val json = JSONObject()
+        json.put("searchTerm", searchTerm)
+        Fuel.post("${GlobalVariables.getActiveURL()}/user/searchMovies")
+            .authentication()
+            .basic(AppPreferences.email, AppPreferences.password)
+            .jsonBody(json.toString())
+            .also { print(it) }
+            .responseObject(MovieResponse.Deserializer()) { request, response, result ->
+                val (movie, err) = result
+                //Add to ArrayList
+                temp.clear()
+
+                movie?.forEach { mv ->
+                    temp.add(mv)
+                }
+
+                println(temp)
+
+                activity?.runOnUiThread(java.lang.Runnable {
+                    movieSearchAdapter.update(temp)
+                })
+
+            }
+    }
+
+
+    private fun fetchUsers(searchTerm: String) {
+
+        var temp: ArrayList<UserResponse> = ArrayList()
+        val json = JSONObject()
+        json.put("searchTerm", searchTerm)
+        Fuel.post("${GlobalVariables.getActiveURL()}/user/searchUsers")
+            .authentication()
+            .basic(AppPreferences.email, AppPreferences.password)
+            .jsonBody(json.toString())
+            .responseObject(UserResponse.Deserializer()) { request, response, result ->
+                val (user, err) = result
+                //Add to ArrayList
+                temp.clear()
+
+                user?.forEach { usr ->
+                    temp.add(usr)
+                }
+
+                println(temp)
+
+                activity?.runOnUiThread(java.lang.Runnable {
+                    userSearchAdapter.update(temp)
+                })
+
+            }
+    }
+
 
 }

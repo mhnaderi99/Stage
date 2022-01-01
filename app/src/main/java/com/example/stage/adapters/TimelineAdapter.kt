@@ -1,19 +1,13 @@
 package com.example.stage.adapters
 
 import android.content.Context
-import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
-import androidx.fragment.app.FragmentManager
-import responses.Post
 import com.example.stage.R
-import com.example.stage.fragments.MovieFragment
-import com.example.stage.utilities.AppPreferences
 import com.example.stage.utilities.GlobalVariables
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
