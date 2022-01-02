@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -23,6 +24,7 @@ import com.squareup.picasso.Picasso
 import org.json.JSONObject
 import com.example.stage.responses.CommentResponse
 import com.example.stage.responses.MovieResponse
+import com.example.stage.responses.UserResponse
 
 
 class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
@@ -57,7 +59,7 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
         summary = view.findViewById(R.id.summary)
         length = view.findViewById(R.id.length)
 
-        val send = view.findViewById<Button>(R.id.send_btn)
+        val send = view.findViewById<ImageButton>(R.id.send_btn)
         val imageView = view.findViewById<ImageView>(R.id.imageView2)
         val textComment = view.findViewById<TextView>(R.id.comment_text)
 
@@ -103,7 +105,11 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
                     .jsonBody(json.toString())
                     .response() { request, response, result ->
                         println(result)
-                        fetchComments()
+                        activity?.runOnUiThread(java.lang.Runnable {
+                            //fetchComments()
+                            commentAdapter.addToList(CommentResponse(movieResponse.id, "", AppPreferences.username, comment.toString(), AppPreferences.password.toInt()))
+                            linearLayoutManager.scrollToPositionWithOffset(0, 0);
+                        })
                     }
             }
         }

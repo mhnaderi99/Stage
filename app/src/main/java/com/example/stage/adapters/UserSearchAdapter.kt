@@ -19,11 +19,18 @@ import com.example.stage.responses.UserResponse
 import com.example.stage.activities.TimelineActivity
 import com.example.stage.fragments.ProfileFragment
 import com.example.stage.R
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 
-class UserSearchAdapter(private var dataSet: ArrayList<UserResponse>) :
-    RecyclerView.Adapter<UserSearchAdapter.ViewHolder>() {
+class UserSearchAdapter(
+    private val dataSet: ArrayList<UserResponse>
+    ) : RecyclerView.Adapter<UserSearchAdapter.ViewHolder>() {
 
+
+    fun getDataSet(): ArrayList<UserResponse> {
+        return dataSet
+    }
 
     /**
      * Provide a reference to the type of views that you are using
@@ -107,7 +114,16 @@ class UserSearchAdapter(private var dataSet: ArrayList<UserResponse>) :
         dataSet.addAll(users)
 
         notifyDataSetChanged()
+    }
 
+    fun addToList(user: UserResponse) {
+        dataSet.add(0, user)
+        notifyItemInserted(0)
+    }
+
+    fun removeFromList(position: Int) {
+        dataSet.removeAt(position)
+        notifyItemRemoved(position)
     }
 
     // Return the size of your dataset (invoked by the layout manager)

@@ -6,6 +6,9 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:background="@color/dark"
+    android:foreground="?attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true"
     android:layout_margin="5dp"
     >
 
@@ -26,6 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:gravity="center"
+            android:textSize="14sp"
             android:layout_marginLeft="10dp"
             android:textColor="@color/light"
             android:text="Username" />
@@ -38,23 +42,16 @@
         android:layout_height="1dp"
         android:background="?android:attr/listDivider" />
 
-    <androidx.core.widget.NestedScrollView
-        android:layout_marginLeft="5dp"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
         <TextView
             android:layout_margin="16dp"
             android:textColor="@color/light"
             android:gravity="left"
             android:id="@+id/comment_textview"
-            android:textSize="6pt"
+            android:textSize="12sp"
             android:scrollbars="vertical"
             android:layout_width="match_parent"
-            android:layout_height="150dp"
+            android:layout_height="wrap_content"
             android:text="TextView" />
-
-    </androidx.core.widget.NestedScrollView>
 
 
 

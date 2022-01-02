@@ -137,7 +137,6 @@ class LoginActivity : AppCompatActivity() {
                 }
                 else {
                     //email is not valid
-
                     toast("Invalid Email Address")
                 }
 

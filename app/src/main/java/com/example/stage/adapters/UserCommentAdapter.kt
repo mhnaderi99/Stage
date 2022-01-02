@@ -24,7 +24,7 @@ class UserCommentAdapter(private var dataSet: ArrayList<CommentResponse>) :
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        val username: TextView = view.findViewById(R.id.username)
+//        val username: TextView = view.findViewById(R.id.username)
         val movieName: TextView = view.findViewById(R.id.movieName)
         val comment: TextView = view.findViewById(R.id.comment)
         val movieImage: ImageView = view.findViewById(R.id.avatar)
@@ -50,7 +50,7 @@ class UserCommentAdapter(private var dataSet: ArrayList<CommentResponse>) :
 
         // Get element from your dataset at this position and replace the
         // contents of the view with that element
-        viewHolder.username.text = dataSet[position].username
+//        viewHolder.username.text = dataSet[position].username
         viewHolder.comment.text = dataSet[position].comment_text
         viewHolder.movieName.text = dataSet[position].title
 

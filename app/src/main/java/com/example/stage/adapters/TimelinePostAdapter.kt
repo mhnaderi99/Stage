@@ -1,10 +1,13 @@
 package com.example.stage.adapters
 
+import android.content.Context
+import android.graphics.drawable.BitmapDrawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.recyclerview.widget.RecyclerView
 import com.example.stage.R
 import com.example.stage.utilities.GlobalVariables
@@ -12,7 +15,7 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.example.stage.responses.CommentResponse
 
-class TimelinePostAdapter(private var dataSet: ArrayList<CommentResponse>) :
+class TimelinePostAdapter(private var dataSet: ArrayList<CommentResponse>, val ctx: Context) :
     RecyclerView.Adapter<TimelinePostAdapter.ViewHolder>() {
 
 
@@ -38,7 +41,7 @@ class TimelinePostAdapter(private var dataSet: ArrayList<CommentResponse>) :
     override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
         // Create a new view, which defines the UI of the list item
         val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.post_row, viewGroup, false)
+            .inflate(R.layout.timeline_row, viewGroup, false)
 
 
         return ViewHolder(view)
@@ -71,7 +74,13 @@ class TimelinePostAdapter(private var dataSet: ArrayList<CommentResponse>) :
             .error(R.drawable.user_image)
             .into(viewHolder.userImage, object : Callback {
                 override fun onSuccess() {
-                    println("success")
+                    val imageBitmap = (viewHolder.userImage.getDrawable() as BitmapDrawable).bitmap
+                    val imageDrawable =
+                        RoundedBitmapDrawableFactory.create(ctx.resources, imageBitmap)
+                    imageDrawable.isCircular = true
+                    imageDrawable.cornerRadius =
+                        Math.max(imageBitmap.width, imageBitmap.height) / 2.0f
+                    viewHolder.userImage.setImageDrawable(imageDrawable)
                 }
 
                 override fun onError(e: Exception?) {

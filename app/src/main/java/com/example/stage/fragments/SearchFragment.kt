@@ -38,7 +38,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
     lateinit var userSearchAdapter: UserSearchAdapter
     lateinit var layout: ConstraintLayout
 
-
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

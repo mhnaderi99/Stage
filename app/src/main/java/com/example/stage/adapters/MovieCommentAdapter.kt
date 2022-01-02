@@ -14,6 +14,7 @@ import com.example.stage.utilities.GlobalVariables
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import com.example.stage.responses.CommentResponse
+import com.example.stage.responses.UserResponse
 
 
 class MovieCommentAdapter(private var dataSet: ArrayList<CommentResponse>, val ctx: Context) :
@@ -81,6 +82,11 @@ class MovieCommentAdapter(private var dataSet: ArrayList<CommentResponse>, val c
 
         notifyDataSetChanged()
 
+    }
+
+    fun addToList(comment: CommentResponse) {
+        dataSet.add(0, comment)
+        notifyItemInserted(0)
     }
 
     // Return the size of your dataset (invoked by the layout manager)

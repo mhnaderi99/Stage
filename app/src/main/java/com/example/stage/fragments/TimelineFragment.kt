@@ -1,5 +1,6 @@
 package com.example.stage.fragments
 
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,6 +16,10 @@ import com.example.stage.utilities.GlobalVariables
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.example.stage.responses.CommentResponse
+import android.graphics.drawable.GradientDrawable
+
+
+
 
 
 
@@ -34,14 +39,16 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline) {
         val view: View = inflater.inflate(R.layout.fragment_timeline, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
 
-        recyclerView.addItemDecoration(
-            DividerItemDecoration(
-                context,
-                DividerItemDecoration.VERTICAL
-            )
-        )
+//        val itemDecoration = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
+//        val drawable = GradientDrawable(
+//            GradientDrawable.Orientation.BOTTOM_TOP,
+//            intArrayOf(-0x80809, -0x80809)
+//        )
+//        drawable.setSize(1, 1)
+//        itemDecoration.setDrawable(drawable)
+//        recyclerView.addItemDecoration(itemDecoration)
 
-        commentAdapter = TimelinePostAdapter(ArrayList())
+        commentAdapter = TimelinePostAdapter(ArrayList(), context!!)
         linearLayoutManager = LinearLayoutManager(view.context)
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = commentAdapter

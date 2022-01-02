@@ -151,9 +151,9 @@
         android:id="@+id/comment_box"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="4dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginEnd="30dp"
         android:layout_marginBottom="16dp"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -181,15 +181,20 @@
             </com.google.android.material.textfield.TextInputLayout>
         </FrameLayout>
 
-        <Button
+
+        <ImageButton
             android:id="@+id/send_btn"
             android:layout_marginLeft="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
-            android:backgroundTint="@color/yellow"
-            android:textColor="@color/darker"
-            android:text="Send" />
+            android:text="Send"
+            android:scaleType="fitCenter"
+            android:src="@drawable/send"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true">
+        </ImageButton>
 
     </LinearLayout>
 

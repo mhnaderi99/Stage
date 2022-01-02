@@ -23,8 +23,15 @@ import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.example.stage.responses.CommentResponse
 import com.example.stage.responses.UserResponse
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
-class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: String, var followed: Boolean) : Fragment(R.layout.fragment_profile) {
+class ProfileFragment(
+    val selfProfile: Boolean,
+    val userId: Int,
+    val username: String,
+    var followed: Boolean
+) : Fragment(R.layout.fragment_profile) {
 
     lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var commentsAdapter: UserCommentAdapter
@@ -60,7 +67,7 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
         val tabLayout: TabLayout = view.findViewById(R.id.profileTabLayout)
         val usernameLabel: TextView = view.findViewById(R.id.usernameLabel)
 
-        when(tabLayout.selectedTabPosition){
+        when (tabLayout.selectedTabPosition) {
             0 -> {
                 fetchUserComments(userId)
                 recyclerView.adapter = commentsAdapter
@@ -79,7 +86,9 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
             logoutButton.visibility = View.VISIBLE
             followButton.visibility = View.GONE
             unfollowButton.visibility = View.GONE
-            Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${AppPreferences.password}").fit().centerCrop()
+            Picasso.get()
+                .load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${AppPreferences.password}")
+                .fit().centerCrop()
                 .placeholder(R.color.yellow)
                 .error(R.drawable.user_image)
                 .into(userImage)
@@ -96,7 +105,8 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
             }
 
 
-            Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${userId}").fit().centerCrop()
+            Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${userId}")
+                .fit().centerCrop()
                 .placeholder(R.color.yellow)
                 .error(R.drawable.user_image)
                 .into(userImage)
@@ -122,6 +132,7 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
                     }
                 }
             }
+
             override fun onTabUnselected(tab: TabLayout.Tab) {}
             override fun onTabReselected(tab: TabLayout.Tab) {}
         })
@@ -140,6 +151,21 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
                     activity?.runOnUiThread(java.lang.Runnable {
                         followButton.visibility = View.GONE
                         unfollowButton.visibility = View.VISIBLE
+
+                        if (tabLayout.selectedTabPosition == 1) {
+                            //update followers list
+
+                            GlobalScope.launch {
+                                followersAdapter.addToList(
+                                    UserResponse(
+                                        AppPreferences.username,
+                                        AppPreferences.password.toInt()
+                                    )
+                                )
+                            }
+                            //fetchFollowers(userId)
+                        }
+
                     })
                 }
         }
@@ -154,8 +180,15 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
                     activity?.runOnUiThread(java.lang.Runnable {
                         unfollowButton.visibility = View.GONE
                         followButton.visibility = View.VISIBLE
-                    })
 
+                        if (tabLayout.selectedTabPosition == 1) {
+
+                            val deletedUserPosition = followersAdapter.getDataSet().indexOf(
+                                followersAdapter.getDataSet().filter { s -> s.id == AppPreferences.password.toInt() }.get(0)
+                            )
+                            followersAdapter.removeFromList(deletedUserPosition)
+                        }
+                    })
                 }
         }
 

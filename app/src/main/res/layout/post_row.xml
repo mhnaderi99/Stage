@@ -36,10 +36,9 @@
 
         </androidx.cardview.widget.CardView>
 
-
         <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -57,19 +56,21 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
+
+
                 <TextView
                     android:id="@+id/comment"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="top"
                     android:scrollbars="vertical"
-                    android:textColor="@color/white"
+                    android:textColor="@color/light"
                     android:textSize="14sp" />
-
 
             </LinearLayout>
 
         </androidx.core.widget.NestedScrollView>
+
 
 
     </LinearLayout>
