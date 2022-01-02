@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.stage.R
@@ -20,7 +21,6 @@ import responses.CommentResponse
 
 class TimelineFragment : Fragment(R.layout.fragment_timeline) {
 
-    private var activeUrl = GlobalVariables.getActiveURL()
     lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var commentAdapter: TimelinePostAdapter
 
@@ -34,6 +34,13 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline) {
         val view: View = inflater.inflate(R.layout.fragment_timeline, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
 
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+
         commentAdapter = TimelinePostAdapter(ArrayList())
         linearLayoutManager = LinearLayoutManager(view.context)
         recyclerView.layoutManager = linearLayoutManager
@@ -46,7 +53,7 @@ class TimelineFragment : Fragment(R.layout.fragment_timeline) {
     private fun fetchComments(){
 
         var temp: ArrayList<CommentResponse> = ArrayList()
-        Fuel.get("$activeUrl/user/getTimelineComments")
+        Fuel.get("${GlobalVariables.getActiveURL()}/user/getTimelineComments")
             .authentication()
             .basic(AppPreferences.email, AppPreferences.password)
             .responseObject(CommentResponse.Deserializer()) { request, response, result ->

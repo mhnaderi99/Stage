@@ -52,7 +52,6 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
         savedInstanceState: Bundle?
     ): View? {
 
-        //fetchComments()
         val view: View = inflater.inflate(R.layout.fragment_search, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.search_movie_list)
         movieSearchAdapter = MovieSearchAdapter(ArrayList())
@@ -74,8 +73,10 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         if (tabLayout.selectedTabPosition == 0) {
             recyclerView.adapter = movieSearchAdapter
+            searchBox.hint = "Search movies"
         } else {
             recyclerView.adapter = userSearchAdapter
+            searchBox.hint = "Search users"
         }
 
         backButton.setOnClickListener {

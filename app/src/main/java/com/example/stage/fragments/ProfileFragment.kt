@@ -1,7 +1,6 @@
 package com.example.stage.fragments
 
 import android.content.Intent
-import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,44 +10,29 @@ import android.widget.ImageView
 import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.stage.utilities.AppPreferences
 import com.example.stage.activities.LoginActivity
 import com.example.stage.R
-import com.example.stage.adapters.MovieListAdapter
-import com.example.stage.adapters.TimelineAdapter
-import com.example.stage.adapters.UserListAdapter
-import com.example.stage.adapters.userCommentAdapter
+import com.example.stage.adapters.*
 import com.example.stage.utilities.GlobalVariables
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
-import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import org.json.JSONTokener
 import responses.CommentResponse
-import responses.MovieResponse
 import responses.UserResponse
 
 class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: String, var followed: Boolean) : Fragment(R.layout.fragment_profile) {
 
-    private var activeUrl = GlobalVariables.getActiveURL()
-    var followers: ArrayList<UserResponse> = ArrayList()
-    var followerAdapter: UserListAdapter? = null
-    var followings: ArrayList<UserResponse> = ArrayList()
-    var followingAdapter: UserListAdapter? = null
-    var comments: ArrayList<CommentResponse> = ArrayList()
-    var commentsAdapter: userCommentAdapter? = null
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        followerAdapter = activity?.let { UserListAdapter(it, followers) }
-        followingAdapter = activity?.let { UserListAdapter(it, followings) }
-        commentsAdapter = activity?.let { userCommentAdapter(it, comments) }
-
-    }
+    lateinit var linearLayoutManager: LinearLayoutManager
+    lateinit var commentsAdapter: NewUserCommentAdapter
+    lateinit var followersAdapter: UserSearchAdapter
+    lateinit var followingsAdapter: UserSearchAdapter
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -56,13 +40,43 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
         savedInstanceState: Bundle?
     ): View? {
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
+        val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
+
+        commentsAdapter = NewUserCommentAdapter(ArrayList())
+        followersAdapter = UserSearchAdapter(ArrayList())
+        followingsAdapter = UserSearchAdapter(ArrayList())
+
+        linearLayoutManager = LinearLayoutManager(view.context)
+        recyclerView.layoutManager = linearLayoutManager
+
+        recyclerView.addItemDecoration(
+            DividerItemDecoration(
+                context,
+                DividerItemDecoration.VERTICAL
+            )
+        )
+
         val logoutButton: Button = view.findViewById(R.id.logout)
         val followButton: Button = view.findViewById(R.id.follow)
         val unfollowButton: Button = view.findViewById(R.id.unfollow)
         val userImage: ImageView = view.findViewById(R.id.userImage)
         val tabLayout: TabLayout = view.findViewById(R.id.profileTabLayout)
         val usernameLabel: TextView = view.findViewById(R.id.usernameLabel)
-        val listView: ListView = view.findViewById(R.id.profile_list)
+
+        when(tabLayout.selectedTabPosition){
+            0 -> {
+                fetchUserComments(userId)
+                recyclerView.adapter = commentsAdapter
+            }
+            1 -> {
+                fetchFollowers(userId)
+                recyclerView.adapter = followersAdapter
+            }
+            2 -> {
+                fetchFollowings(userId)
+                recyclerView.adapter = followingsAdapter
+            }
+        }
 
         if (selfProfile) {
             logoutButton.visibility = View.VISIBLE
@@ -92,59 +106,22 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
             usernameLabel.text = username
         }
 
-        listView.adapter = commentsAdapter
-
-        GlobalScope.launch {
-            Fuel.get("$activeUrl/getUserComments?id=${userId}")
-                .responseObject(CommentResponse.Deserializer()) { request, response, result ->
-                    val (comment, err) = result
-                    //Add to ArrayList
-                    comments.clear()
-
-                    println(comment)
-                    comment?.forEach { cmt ->
-                        comments.add(cmt)
-                    }
-                }
-        }
-
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
             override fun onTabSelected(tab: TabLayout.Tab) {
 
                 println(tab.position)
                 when (tab.position) {
                     0 -> {
-                        listView.adapter = commentsAdapter
+                        fetchUserComments(userId)
+                        recyclerView.adapter = commentsAdapter
                     }
                     1 -> {
-                        Fuel.get("$activeUrl/user/getFollowers?id=${userId}")
-                            .authentication()
-                            .basic(AppPreferences.email, AppPreferences.password)
-                            .responseObject(UserResponse.Deserializer()) { request, response, result ->
-                                val (follower, err) = result
-                                //Add to ArrayList
-                                followers.clear()
-
-                                follower?.forEach { flw ->
-                                    followers.add(flw)
-                                }
-                            }
-                        listView.adapter = followerAdapter
+                        fetchFollowers(userId)
+                        recyclerView.adapter = followersAdapter
                     }
                     2 -> {
-                        Fuel.get("$activeUrl/user/getFollowings?id=${userId}")
-                            .authentication()
-                            .basic(AppPreferences.email, AppPreferences.password)
-                            .responseObject(UserResponse.Deserializer()) { request, response, result ->
-                                val (following, err) = result
-                                //Add to ArrayList
-                                followings.clear()
-
-                                following?.forEach { flw ->
-                                    followings.add(flw)
-                                }
-                            }
-                        listView.adapter = followingAdapter
+                        fetchFollowings(userId)
+                        recyclerView.adapter = followingsAdapter
                     }
                 }
             }
@@ -157,30 +134,97 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
         }
 
         followButton.setOnClickListener {
-            Fuel.post("$activeUrl/user/follow?id=${userId}")
+            Fuel.post("${GlobalVariables.getActiveURL()}/user/follow?id=${userId}")
                 .authentication()
                 .basic(AppPreferences.email, AppPreferences.password)
                 .response() { request, response, result ->
                     println(result)
-                    //this.followed = true
-                    //followButton.visibility = View.GONE
-                    //unfollowButton.visibility = View.VISIBLE
+
+                    activity?.runOnUiThread(java.lang.Runnable {
+                        followButton.visibility = View.GONE
+                        unfollowButton.visibility = View.VISIBLE
+                    })
                 }
         }
 
         unfollowButton.setOnClickListener {
-            Fuel.post("$activeUrl/user/unfollow?id=${userId}")
+            Fuel.post("${GlobalVariables.getActiveURL()}/user/unfollow?id=${userId}")
                 .authentication()
                 .basic(AppPreferences.email, AppPreferences.password)
                 .response() { request, response, result ->
                     println(result)
-                    //this.followed = false
-                    //unfollowButton.visibility = View.GONE
-                    //followButton.visibility = View.VISIBLE
+
+                    activity?.runOnUiThread(java.lang.Runnable {
+                        unfollowButton.visibility = View.GONE
+                        followButton.visibility = View.VISIBLE
+                    })
+
                 }
         }
 
         return view
+    }
+
+    private fun fetchUserComments(userId: Int) {
+
+        var temp: ArrayList<CommentResponse> = ArrayList()
+        Fuel.get("${GlobalVariables.getActiveURL()}/getUserComments?id=${userId}")
+            .responseObject(CommentResponse.Deserializer()) { request, response, result ->
+                val (comment, err) = result
+                //Add to ArrayList
+                temp.clear()
+
+                comment?.forEach { cmt ->
+                    temp.add(cmt)
+                }
+
+                activity?.runOnUiThread(java.lang.Runnable {
+                    commentsAdapter.update(temp)
+                })
+            }
+    }
+
+
+    private fun fetchFollowers(userId: Int) {
+
+        var temp: ArrayList<UserResponse> = ArrayList()
+        Fuel.get("${GlobalVariables.getActiveURL()}/user/getFollowers?id=${userId}")
+            .authentication()
+            .basic(AppPreferences.email, AppPreferences.password)
+            .responseObject(UserResponse.Deserializer()) { request, response, result ->
+                val (follower, err) = result
+                //Add to ArrayList
+                temp.clear()
+
+                follower?.forEach { flw ->
+                    temp.add(flw)
+                }
+
+                activity?.runOnUiThread(java.lang.Runnable {
+                    followersAdapter.update(temp)
+                })
+            }
+    }
+
+    private fun fetchFollowings(userId: Int) {
+
+        var temp: ArrayList<UserResponse> = ArrayList()
+        Fuel.get("${GlobalVariables.getActiveURL()}/user/getFollowings?id=${userId}")
+            .authentication()
+            .basic(AppPreferences.email, AppPreferences.password)
+            .responseObject(UserResponse.Deserializer()) { request, response, result ->
+                val (following, err) = result
+                //Add to ArrayList
+                temp.clear()
+
+                following?.forEach { flw ->
+                    temp.add(flw)
+                }
+
+                activity?.runOnUiThread(java.lang.Runnable {
+                    followingsAdapter.update(temp)
+                })
+            }
     }
 
     private fun logout() {

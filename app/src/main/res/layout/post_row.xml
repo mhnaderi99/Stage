@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_marginVertical="20dp"
     android:background="@color/darker"
@@ -53,23 +53,14 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
-
-                <androidx.core.widget.NestedScrollView
-                    android:layout_marginLeft="5dp"
+                <TextView
+                    android:id="@+id/comment"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <TextView
-                        android:id="@+id/comment"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:gravity="top"
-                        android:scrollbars="vertical"
-                        android:textColor="@color/white"
-                        android:textSize="14sp" />
-
-                </androidx.core.widget.NestedScrollView>
-
+                    android:layout_height="match_parent"
+                    android:gravity="top"
+                    android:scrollbars="vertical"
+                    android:textColor="@color/white"
+                    android:textSize="14sp" />
 
 
             </LinearLayout>

@@ -13,7 +13,7 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import responses.CommentResponse
 
-class userCommentAdapter(private val context: Context, private val arrayList: java.util.ArrayList<CommentResponse>): BaseAdapter() {
+class UserCommentAdapter(private val context: Context, private val arrayList: java.util.ArrayList<CommentResponse>): BaseAdapter() {
 
     private lateinit var movieName: TextView
     private lateinit var username: TextView
