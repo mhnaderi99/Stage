@@ -1,4 +1,4 @@
-package responses
+package com.example.stage.responses
 
 import com.github.kittinunf.fuel.core.ResponseDeserializable
 import com.google.gson.Gson

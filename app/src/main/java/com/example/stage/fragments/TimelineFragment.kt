@@ -14,7 +14,7 @@ import com.example.stage.utilities.AppPreferences
 import com.example.stage.utilities.GlobalVariables
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
-import responses.CommentResponse
+import com.example.stage.responses.CommentResponse
 
 
 

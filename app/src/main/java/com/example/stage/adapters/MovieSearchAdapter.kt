@@ -12,8 +12,7 @@ import com.example.stage.fragments.MovieFragment
 import com.example.stage.utilities.GlobalVariables
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import responses.CommentResponse
-import responses.MovieResponse
+import com.example.stage.responses.MovieResponse
 
 class MovieSearchAdapter(private var dataSet: ArrayList<MovieResponse>) :
     RecyclerView.Adapter<MovieSearchAdapter.ViewHolder>() {

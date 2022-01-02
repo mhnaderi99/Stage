@@ -6,36 +6,28 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.stage.R
 import com.example.stage.adapters.MovieCommentAdapter
-import com.example.stage.adapters.MovieSearchAdapter
-import com.example.stage.adapters.NewMovieCommentAdapter
-import com.example.stage.adapters.TimelineAdapter
 import com.example.stage.utilities.AppPreferences
 import com.example.stage.utilities.GlobalVariables
-import com.example.stage.utilities.Utilities
 import com.example.stage.utilities.Utilities.Companion.hideKeyboard
 import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import org.json.JSONObject
-import responses.CommentResponse
-import responses.MovieResponse
-import responses.UserResponse
+import com.example.stage.responses.CommentResponse
+import com.example.stage.responses.MovieResponse
 
 
 class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
 
-    private lateinit var commentAdapter: NewMovieCommentAdapter
+    private lateinit var commentAdapter: MovieCommentAdapter
     lateinit var linearLayoutManager: LinearLayoutManager
 
     private lateinit var length: TextView
@@ -54,7 +46,7 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
         val view: View = inflater.inflate(R.layout.fragment_movie, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
 
-        commentAdapter = NewMovieCommentAdapter(ArrayList(), context!!)
+        commentAdapter = MovieCommentAdapter(ArrayList(), context!!)
         linearLayoutManager = LinearLayoutManager(view.context)
         recyclerView.layoutManager = linearLayoutManager
         recyclerView.adapter = commentAdapter

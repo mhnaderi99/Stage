@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
-import android.widget.ListView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -22,15 +21,13 @@ import com.github.kittinunf.fuel.Fuel
 import com.github.kittinunf.fuel.core.extensions.authentication
 import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import responses.CommentResponse
-import responses.UserResponse
+import com.example.stage.responses.CommentResponse
+import com.example.stage.responses.UserResponse
 
 class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: String, var followed: Boolean) : Fragment(R.layout.fragment_profile) {
 
     lateinit var linearLayoutManager: LinearLayoutManager
-    lateinit var commentsAdapter: NewUserCommentAdapter
+    lateinit var commentsAdapter: UserCommentAdapter
     lateinit var followersAdapter: UserSearchAdapter
     lateinit var followingsAdapter: UserSearchAdapter
 
@@ -42,7 +39,7 @@ class ProfileFragment(val selfProfile: Boolean, val userId: Int, val username: S
         val view: View = inflater.inflate(R.layout.fragment_profile, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
 
-        commentsAdapter = NewUserCommentAdapter(ArrayList())
+        commentsAdapter = UserCommentAdapter(ArrayList())
         followersAdapter = UserSearchAdapter(ArrayList())
         followingsAdapter = UserSearchAdapter(ArrayList())
 

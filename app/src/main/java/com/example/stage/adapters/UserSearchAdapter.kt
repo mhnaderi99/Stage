@@ -3,7 +3,6 @@ package com.example.stage.adapters
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -15,16 +14,10 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 import org.json.JSONObject
 import org.json.JSONTokener
-import responses.MovieResponse
-import androidx.fragment.app.FragmentManager
-import kotlinx.coroutines.runBlocking
-import responses.UserResponse
-import android.content.Context
+import com.example.stage.responses.UserResponse
 
-import androidx.fragment.app.FragmentActivity
 import com.example.stage.activities.TimelineActivity
 import com.example.stage.fragments.ProfileFragment
-import androidx.appcompat.app.AppCompatActivity
 import com.example.stage.R
 
 

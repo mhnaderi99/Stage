@@ -10,7 +10,7 @@ import com.example.stage.R
 import com.example.stage.utilities.GlobalVariables
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import responses.CommentResponse
+import com.example.stage.responses.CommentResponse
 
 class TimelinePostAdapter(private var dataSet: ArrayList<CommentResponse>) :
     RecyclerView.Adapter<TimelinePostAdapter.ViewHolder>() {

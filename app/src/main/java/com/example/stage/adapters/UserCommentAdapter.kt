@@ -1,53 +1,64 @@
 package com.example.stage.adapters
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.BaseAdapter
 import android.widget.ImageView
 import android.widget.TextView
-import com.example.stage.R
+import androidx.recyclerview.widget.RecyclerView
 import com.example.stage.utilities.GlobalVariables
 import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
-import responses.CommentResponse
 
-class UserCommentAdapter(private val context: Context, private val arrayList: java.util.ArrayList<CommentResponse>): BaseAdapter() {
+import com.example.stage.R
+import com.example.stage.responses.CommentResponse
 
-    private lateinit var movieName: TextView
-    private lateinit var username: TextView
-    private lateinit var comment: TextView
-    private lateinit var avatar: ImageView
 
-    override fun getCount(): Int {
-        return arrayList.size
+class UserCommentAdapter(private var dataSet: ArrayList<CommentResponse>) :
+    RecyclerView.Adapter<UserCommentAdapter.ViewHolder>() {
+
+
+    /**
+     * Provide a reference to the type of views that you are using
+     * (custom ViewHolder).
+     */
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+
+        val username: TextView = view.findViewById(R.id.username)
+        val movieName: TextView = view.findViewById(R.id.movieName)
+        val comment: TextView = view.findViewById(R.id.comment)
+        val movieImage: ImageView = view.findViewById(R.id.avatar)
+
+
+        init {
+            // Define click listener for the ViewHolder's View.
+        }
     }
-    override fun getItem(position: Int): Any {
-        return position
+
+    // Create new views (invoked by the layout manager)
+    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
+        // Create a new view, which defines the UI of the list item
+        val view = LayoutInflater.from(viewGroup.context)
+            .inflate(R.layout.user_comment_row, viewGroup, false)
+
+
+        return ViewHolder(view)
     }
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-    override fun getView(position: Int, convertView: View?, parent: ViewGroup): View? {
-        var convertView = convertView
-        convertView = LayoutInflater.from(context).inflate(R.layout.user_comment_row, parent, false)
 
-        movieName = convertView.findViewById(R.id.movieName)
-        username = convertView.findViewById(R.id.username)
-        comment = convertView.findViewById(R.id.comment)
-        avatar = convertView.findViewById(R.id.avatar)
+    // Replace the contents of a view (invoked by the layout manager)
+    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
 
-        movieName.text = " " + arrayList[position].title
-        username.text = " " + arrayList[position].username
-        comment.text = arrayList[position].comment_text
+        // Get element from your dataset at this position and replace the
+        // contents of the view with that element
+        viewHolder.username.text = dataSet[position].username
+        viewHolder.comment.text = dataSet[position].comment_text
+        viewHolder.movieName.text = dataSet[position].title
 
-        //Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadMovieImage?id=${arrayList[position].id}").into(avatar)
-
-        Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadMovieImage?id=${arrayList[position].id}")
+        Picasso.get()
+            .load("${GlobalVariables.getActiveURL()}/downloadMovieImage?id=${dataSet[position].id}")
             .placeholder(R.color.yellow)
             .error(R.drawable.user_image)
-            .into(avatar, object : Callback {
+            .into(viewHolder.movieImage, object : Callback {
                 override fun onSuccess() {
                     println("success")
                 }
@@ -57,7 +68,18 @@ class UserCommentAdapter(private val context: Context, private val arrayList: ja
                 }
             })
 
-
-        return convertView
     }
+
+
+    fun update(comments: ArrayList<CommentResponse>) {
+        dataSet.clear()
+        dataSet.addAll(comments)
+
+        notifyDataSetChanged()
+
+    }
+
+    // Return the size of your dataset (invoked by the layout manager)
+    override fun getItemCount() = dataSet.size
+
 }

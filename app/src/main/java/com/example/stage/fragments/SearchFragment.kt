@@ -1,16 +1,13 @@
 package com.example.stage.fragments
 
-import android.content.Context
 import android.graphics.Rect
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
-import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import android.widget.LinearLayout
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import com.example.stage.*
@@ -21,17 +18,13 @@ import com.github.kittinunf.fuel.core.extensions.authentication
 import com.github.kittinunf.fuel.core.extensions.jsonBody
 import com.google.android.material.tabs.TabLayout
 import org.json.JSONObject
-import responses.MovieResponse
-import responses.UserResponse
+import com.example.stage.responses.MovieResponse
+import com.example.stage.responses.UserResponse
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.stage.adapters.*
 import androidx.recyclerview.widget.DividerItemDecoration
-import android.widget.Toast
 
-import android.view.View.OnFocusChangeListener
-import android.view.ViewTreeObserver
-import android.view.ViewTreeObserver.OnGlobalLayoutListener
 import android.view.inputmethod.EditorInfo
 import android.widget.ImageButton
 import com.example.stage.utilities.Utilities.Companion.hideKeyboard
@@ -102,7 +95,11 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
         searchBox.setOnEditorActionListener { v, actionId, event ->
             if(actionId == EditorInfo.IME_ACTION_SEARCH){
-                hideKeyboard()
+                fetchUsers(searchBox.text.toString())
+                if (! searchBox.text.toString().isEmpty()) {
+                    hideKeyboard()
+                }
+
                 true
             } else {
                 false
@@ -114,17 +111,9 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
                 val searchTerm = searchBox.text.toString()
                 if (tabLayout.selectedTabPosition == 0) {
-                    if(! searchTerm.isEmpty()) {
-                        fetchMovies(searchTerm)
-                    } else {
-                        movieSearchAdapter.update(ArrayList())
-                    }
+                    fetchMovies(searchTerm)
                 } else {
-                    if(! searchTerm.isEmpty()) {
-                        fetchUsers(searchTerm)
-                    } else {
-                        userSearchAdapter.update(ArrayList())
-                    }
+                    fetchUsers(searchTerm)
 
                 }
 
@@ -143,11 +132,13 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
                     //searchBox.setText("");
                     recyclerView.adapter = movieSearchAdapter
                     searchBox.hint = "Search movies"
+                    fetchMovies(searchBox.text.toString())
                 } else {
                     //users tab selected
                     //searchBox.setText("");
                     recyclerView.adapter = userSearchAdapter
                     searchBox.hint = "Search users"
+                    fetchUsers(searchBox.text.toString())
                 }
             }
             override fun onTabUnselected(tab: TabLayout.Tab) {}
@@ -160,7 +151,11 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
 
     private fun fetchMovies(searchTerm: String) {
-
+        if (searchTerm.isEmpty()) {
+            movieSearchAdapter.update(ArrayList())
+            userSearchAdapter.update(ArrayList())
+            return
+        }
         var temp: ArrayList<MovieResponse> = ArrayList()
         val json = JSONObject()
         json.put("searchTerm", searchTerm)
@@ -189,7 +184,11 @@ class SearchFragment : Fragment(R.layout.fragment_search) {
 
 
     private fun fetchUsers(searchTerm: String) {
-
+        if (searchTerm.isEmpty()) {
+            movieSearchAdapter.update(ArrayList())
+            userSearchAdapter.update(ArrayList())
+            return
+        }
         var temp: ArrayList<UserResponse> = ArrayList()
         val json = JSONObject()
         json.put("searchTerm", searchTerm)
