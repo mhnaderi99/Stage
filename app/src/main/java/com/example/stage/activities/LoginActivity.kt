@@ -105,7 +105,9 @@ class LoginActivity : AppCompatActivity() {
                             }
                             else {
                                 //incorrect code
-                                toast("Incorrect Code")
+                                runOnUiThread(java.lang.Runnable {
+                                    toast("Incorrect Code")
+                                })
                             }
                         }
                     }
