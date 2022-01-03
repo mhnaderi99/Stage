@@ -28,18 +28,26 @@ import com.example.stage.responses.UserResponse
 import com.squareup.picasso.Callback
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import org.json.JSONTokener
 
 class ProfileFragment(
-    val selfProfile: Boolean,
-    val userId: Int,
-    val username: String,
-    var followed: Boolean
+    val userId: Int
 ) : Fragment(R.layout.fragment_profile) {
+
+    var selfProfile: Boolean = AppPreferences.password.toInt() == userId
 
     lateinit var linearLayoutManager: LinearLayoutManager
     lateinit var commentsAdapter: UserCommentAdapter
     lateinit var followersAdapter: UserSearchAdapter
     lateinit var followingsAdapter: UserSearchAdapter
+
+    lateinit var usernameLabel: TextView
+    lateinit var userImage: ImageView
+    lateinit var followButton: Button
+    lateinit var unfollowButton: Button
+    lateinit var logoutButton: Button
+    lateinit var tabLayout: TabLayout
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -63,12 +71,19 @@ class ProfileFragment(
             )
         )
 
-        val logoutButton: Button = view.findViewById(R.id.logout)
-        val followButton: Button = view.findViewById(R.id.follow)
-        val unfollowButton: Button = view.findViewById(R.id.unfollow)
-        val userImage: ImageView = view.findViewById(R.id.userImage)
-        val tabLayout: TabLayout = view.findViewById(R.id.profileTabLayout)
-        val usernameLabel: TextView = view.findViewById(R.id.usernameLabel)
+        logoutButton = view.findViewById(R.id.logout)
+        followButton = view.findViewById(R.id.follow)
+        unfollowButton = view.findViewById(R.id.unfollow)
+        userImage = view.findViewById(R.id.userImage)
+        tabLayout = view.findViewById(R.id.profileTabLayout)
+        usernameLabel = view.findViewById(R.id.usernameLabel)
+
+        Picasso.get()
+            .load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${userId}")
+            .fit().centerCrop()
+            .placeholder(R.color.yellow)
+            .error(R.drawable.user_image)
+            .into(userImage)
 
         when (tabLayout.selectedTabPosition) {
             0 -> {
@@ -89,39 +104,11 @@ class ProfileFragment(
             logoutButton.visibility = View.VISIBLE
             followButton.visibility = View.GONE
             unfollowButton.visibility = View.GONE
-            Picasso.get()
-                .load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${AppPreferences.password}")
-                .fit().centerCrop()
-                .placeholder(R.color.yellow)
-                .error(R.drawable.user_image)
-                .into(userImage)
             usernameLabel.text = AppPreferences.username
 
         } else {
+            fetchUserInfo()
             logoutButton.visibility = View.GONE
-            if (followed) {
-                followButton.visibility = View.GONE
-                unfollowButton.visibility = View.VISIBLE
-            } else {
-                unfollowButton.visibility = View.GONE
-                followButton.visibility = View.VISIBLE
-            }
-
-
-            Picasso.get().load("${GlobalVariables.getActiveURL()}/downloadUserImage?id=${userId}")
-                .fit().centerCrop()
-                .placeholder(R.color.yellow)
-                .error(R.drawable.user_image)
-                .into(userImage, object : Callback {
-                    override fun onSuccess() {
-                        println("success")
-                    }
-
-                    override fun onError(e: Exception?) {
-                        println(e?.message)
-                    }
-                })
-            usernameLabel.text = username
         }
 
         tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
@@ -166,14 +153,13 @@ class ProfileFragment(
                         if (tabLayout.selectedTabPosition == 1) {
                             //update followers list
 
-                            GlobalScope.launch {
-                                followersAdapter.addToList(
-                                    UserResponse(
-                                        AppPreferences.username,
-                                        AppPreferences.password.toInt()
-                                    )
+                            followersAdapter.addToList(
+                                UserResponse(
+                                    AppPreferences.username,
+                                    AppPreferences.password.toInt()
                                 )
-                            }
+                            )
+
                             //fetchFollowers(userId)
                         }
 
@@ -195,7 +181,8 @@ class ProfileFragment(
                         if (tabLayout.selectedTabPosition == 1) {
 
                             val deletedUserPosition = followersAdapter.getDataSet().indexOf(
-                                followersAdapter.getDataSet().filter { s -> s.id == AppPreferences.password.toInt() }.get(0)
+                                followersAdapter.getDataSet()
+                                    .filter { s -> s.id == AppPreferences.password.toInt() }.get(0)
                             )
                             followersAdapter.removeFromList(deletedUserPosition)
                         }
@@ -204,6 +191,33 @@ class ProfileFragment(
         }
 
         return view
+    }
+
+    private fun fetchUserInfo() {
+        Fuel.get("${GlobalVariables.getActiveURL()}/getUserInfoById?id=${userId}")
+            .authentication()
+            .basic(AppPreferences.email, AppPreferences.password)
+            .response() { request, response, result ->
+                val (bytes, error) = result
+                if (bytes != null) {
+                    val res = String(bytes)
+                    val jsonResult = JSONTokener(res).nextValue() as JSONObject
+                    println(jsonResult)
+
+                    activity?.runOnUiThread(java.lang.Runnable {
+                        usernameLabel.text = jsonResult.getString("username")
+                        if (jsonResult.getBoolean("followed")) {
+                            followButton.visibility = View.GONE
+                            unfollowButton.visibility = View.VISIBLE
+                        } else {
+                            unfollowButton.visibility = View.GONE
+                            followButton.visibility = View.VISIBLE
+                        }
+
+                    })
+                }
+
+            }
     }
 
     private fun fetchUserComments(userId: Int) {

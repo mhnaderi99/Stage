@@ -34,7 +34,7 @@ class TimelineActivity: AppCompatActivity() {
 
             val timelineFragment = TimelineFragment()
             val searchFragment = SearchFragment()
-            val profileFragment = ProfileFragment(true, AppPreferences.password.toInt(), AppPreferences.username, false)
+            val profileFragment = ProfileFragment(AppPreferences.password.toInt())
 
             setCurrentFragment(timelineFragment, 0)
 

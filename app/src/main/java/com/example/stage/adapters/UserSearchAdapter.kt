@@ -25,7 +25,7 @@ import kotlinx.coroutines.launch
 
 class UserSearchAdapter(
     private val dataSet: ArrayList<UserResponse>
-    ) : RecyclerView.Adapter<UserSearchAdapter.ViewHolder>() {
+) : RecyclerView.Adapter<UserSearchAdapter.ViewHolder>() {
 
 
     fun getDataSet(): ArrayList<UserResponse> {
@@ -81,29 +81,13 @@ class UserSearchAdapter(
         with(viewHolder.itemView) {
             setOnClickListener {
                 val userId = dataSet[position].id
-                val username = dataSet[position].username
 
-                Fuel.get("${GlobalVariables.getActiveURL()}/user/checkFollow?id=${userId}")
-                    .authentication()
-                    .basic(AppPreferences.email, AppPreferences.password)
-                    .response { result ->
-                        val (bytes, error) = result
-                        if (bytes != null) {
-                            val res = String(bytes)
-                            val jsonResult = JSONTokener(res).nextValue() as JSONObject
-                            val followed = jsonResult.getInt("count") > 0
-                            val self = AppPreferences.password.toInt() == userId
-
-                            println("$followed $self")
-
-                            val manager = (context as TimelineActivity).supportFragmentManager
-                            val profileFragment = ProfileFragment(self, userId, username, followed)
-                            manager.beginTransaction().replace(com.example.stage.R.id.flFragment, profileFragment)
-                                .addToBackStack("xyz")
-                                .commit()
-                        }
-                    }
-
+                val manager = (context as TimelineActivity).supportFragmentManager
+                val profileFragment = ProfileFragment(userId)
+                manager.beginTransaction()
+                    .replace(com.example.stage.R.id.flFragment, profileFragment)
+                    .addToBackStack("xyz")
+                    .commit()
             }
         }
     }

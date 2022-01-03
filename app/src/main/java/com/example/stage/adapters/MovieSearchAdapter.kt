@@ -70,7 +70,7 @@ class MovieSearchAdapter(private var dataSet: ArrayList<MovieResponse>) :
         with(viewHolder.itemView) {
             setOnClickListener {
                 val manager = (context as TimelineActivity).supportFragmentManager
-                val movieFragment = MovieFragment(dataSet[position])
+                val movieFragment = MovieFragment(dataSet[position].id)
                 manager.beginTransaction().replace(R.id.flFragment, movieFragment)
                     .addToBackStack("xyz")
                     .commit()

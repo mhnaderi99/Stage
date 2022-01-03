@@ -11,6 +11,8 @@ import com.squareup.picasso.Callback
 import com.squareup.picasso.Picasso
 
 import com.example.stage.R
+import com.example.stage.activities.TimelineActivity
+import com.example.stage.fragments.MovieFragment
 import com.example.stage.responses.CommentResponse
 
 
@@ -67,6 +69,16 @@ class UserCommentAdapter(private var dataSet: ArrayList<CommentResponse>) :
                     println(e?.message)
                 }
             })
+
+        with(viewHolder.itemView) {
+            setOnClickListener {
+                val manager = (context as TimelineActivity).supportFragmentManager
+                val movieFragment = MovieFragment(dataSet[position].id)
+                manager.beginTransaction().replace(R.id.flFragment, movieFragment)
+                    .addToBackStack("xyz")
+                    .commit()
+            }
+        }
 
     }
 

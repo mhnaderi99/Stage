@@ -27,8 +27,9 @@ import com.example.stage.responses.MovieResponse
 import com.example.stage.responses.UserResponse
 
 
-class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
+class MovieFragment(val movieId: Int) : Fragment() {
 
+    //private lateinit var movieResponse: MovieResponse
     private lateinit var commentAdapter: MovieCommentAdapter
     lateinit var linearLayoutManager: LinearLayoutManager
 
@@ -38,13 +39,18 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
     private lateinit var year: TextView
     private lateinit var title1: TextView
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        fetchMovieInfo()
         fetchComments()
+
         val view: View = inflater.inflate(R.layout.fragment_movie, container, false)
         val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
 
@@ -64,21 +70,8 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
         val textComment = view.findViewById<TextView>(R.id.comment_text)
 
 
-
-        val lenStr = padLeftZeros(
-            (movieResponse.length.toInt() / 60).toString(),
-            2
-        ) + ":" + padLeftZeros((movieResponse.length.toInt() % 60).toString(), 2)
-
-
-        title1.text = movieResponse.title
-        year.text = "Year: ${movieResponse.year}"
-        genre.text = "Genre: ${movieResponse.category}"
-        summary.text = "Summary: ${movieResponse.summary}"
-        length.text = "Duration: $lenStr"
-
         Picasso.get()
-            .load("${GlobalVariables.getActiveURL()}/downloadMovieImage?id=${movieResponse.id}")
+            .load("${GlobalVariables.getActiveURL()}/downloadMovieImage?id=${movieId}")
             .placeholder(R.color.yellow)
             .error(R.drawable.user_image)
             .into(imageView, object : Callback {
@@ -97,7 +90,7 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
                 textComment.text = ""
                 hideKeyboard()
                 val json = JSONObject()
-                json.put("movieId", movieResponse.id)
+                json.put("movieId", movieId)
                 json.put("commentText", comment)
                 Fuel.post("${GlobalVariables.getActiveURL()}/user/sendComment")
                     .authentication()
@@ -107,7 +100,7 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
                         println(result)
                         activity?.runOnUiThread(java.lang.Runnable {
                             //fetchComments()
-                            commentAdapter.addToList(CommentResponse(movieResponse.id, "", AppPreferences.username, comment.toString(), AppPreferences.password.toInt()))
+                            commentAdapter.addToList(CommentResponse(movieId, "", AppPreferences.username, comment.toString(), AppPreferences.password.toInt()))
                             linearLayoutManager.scrollToPositionWithOffset(0, 0);
                         })
                     }
@@ -120,9 +113,8 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
 
     private fun fetchComments() {
         var temp: ArrayList<CommentResponse> = ArrayList()
-        val movie_id = movieResponse.id
         //GlobalScope.launch {
-        Fuel.get("${GlobalVariables.getActiveURL()}/getMovieComments?id=$movie_id")
+        Fuel.get("${GlobalVariables.getActiveURL()}/getMovieComments?id=$movieId")
             .responseObject(CommentResponse.Deserializer()) { request, response, result ->
                 val (comment, err) = result
                 //Add to ArrayList
@@ -139,7 +131,26 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
     }
 
     private fun fetchMovieInfo() {
-        val movieId = movieResponse.id
+        Fuel.get("${GlobalVariables.getActiveURL()}/getMovieById?id=${movieId}")
+            .responseObject(MovieResponse.Deserializer()) { request, response, result ->
+                val (movie, err) = result
+                //Add to ArrayList
+
+                val movieResponse = MovieResponse(movie!![0].id, movie[0].title, movie!![0].director, movie!![0].year, movie!![0].summary, movie!![0].length, movie!![0].category)
+
+                val lenStr = padLeftZeros(
+                    (movieResponse.length.toInt() / 60).toString(),
+                    2
+                ) + ":" + padLeftZeros((movieResponse.length.toInt() % 60).toString(), 2)
+
+                activity?.runOnUiThread(java.lang.Runnable {
+                    title1.text = movieResponse.title
+                    year.text = "Year: ${movieResponse.year}"
+                    genre.text = "Genre: ${movieResponse.category}"
+                    summary.text = "Summary: ${movieResponse.summary}"
+                    length.text = "Duration: $lenStr"
+                })
+            }
 
     }
 
@@ -154,4 +165,5 @@ class MovieFragment(val movieResponse: MovieResponse) : Fragment() {
         sb.append(inputString)
         return sb.toString()
     }
+
 }
