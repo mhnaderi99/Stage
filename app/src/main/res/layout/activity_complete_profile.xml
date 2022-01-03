@@ -66,13 +66,12 @@
         app:layout_constraintStart_toStartOf="@+id/buttonLoadPicture"
         app:layout_constraintTop_toBottomOf="@+id/usernameText" />
 
-    <Button
+    <ImageView
         android:id="@+id/buttonLoadPicture"
         android:layout_width="215dp"
         android:layout_height="215dp"
         android:background="@drawable/image"
         android:elegantTextHeight="false"
-        android:text="+"
         android:textAlignment="center"
         android:textColor="@color/darker"
         android:textSize="34sp"
@@ -80,7 +79,7 @@
         android:layout_marginTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4"></Button>
+        app:layout_constraintTop_toBottomOf="@+id/textView4"></ImageView>
 
     <Button
         android:id="@+id/signup"

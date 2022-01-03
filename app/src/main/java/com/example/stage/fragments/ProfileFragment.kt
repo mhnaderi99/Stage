@@ -1,6 +1,7 @@
 package com.example.stage.fragments
 
 import android.content.Intent
+import android.graphics.drawable.BitmapDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.graphics.drawable.RoundedBitmapDrawableFactory
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -23,6 +25,7 @@ import com.google.android.material.tabs.TabLayout
 import com.squareup.picasso.Picasso
 import com.example.stage.responses.CommentResponse
 import com.example.stage.responses.UserResponse
+import com.squareup.picasso.Callback
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -109,7 +112,15 @@ class ProfileFragment(
                 .fit().centerCrop()
                 .placeholder(R.color.yellow)
                 .error(R.drawable.user_image)
-                .into(userImage)
+                .into(userImage, object : Callback {
+                    override fun onSuccess() {
+                        println("success")
+                    }
+
+                    override fun onError(e: Exception?) {
+                        println(e?.message)
+                    }
+                })
             usernameLabel.text = username
         }
 

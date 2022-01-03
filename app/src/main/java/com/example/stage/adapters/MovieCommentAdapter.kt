@@ -59,13 +59,13 @@ class MovieCommentAdapter(private var dataSet: ArrayList<CommentResponse>, val c
             .error(R.drawable.user_image)
             .into(viewHolder.userImage, object : Callback {
                 override fun onSuccess() {
-                    val imageBitmap = (viewHolder.userImage.getDrawable() as BitmapDrawable).bitmap
-                    val imageDrawable =
-                        RoundedBitmapDrawableFactory.create(ctx.resources, imageBitmap)
-                    imageDrawable.isCircular = true
-                    imageDrawable.cornerRadius =
-                        Math.max(imageBitmap.width, imageBitmap.height) / 2.0f
-                    viewHolder.userImage.setImageDrawable(imageDrawable)
+//                    val imageBitmap = (viewHolder.userImage.getDrawable() as BitmapDrawable).bitmap
+//                    val imageDrawable =
+//                        RoundedBitmapDrawableFactory.create(ctx.resources, imageBitmap)
+//                    imageDrawable.isCircular = true
+//                    imageDrawable.cornerRadius =
+//                        Math.max(imageBitmap.width, imageBitmap.height) / 2.0f
+//                    viewHolder.userImage.setImageDrawable(imageDrawable)
                 }
 
                 override fun onError(e: Exception?) {
