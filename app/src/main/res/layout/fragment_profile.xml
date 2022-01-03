@@ -11,7 +11,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:layout_height="115dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="16dp">
@@ -19,8 +19,8 @@
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userImage"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             app:civ_circle_background_color="@color/light"
             app:civ_border_width="2dp"
             app:civ_border_color="@color/silver"/>
@@ -35,7 +35,8 @@
             android:gravity="center_vertical"
             android:textColor="@color/light"
             android:textDirection="ltr"
-            android:textSize="10pt" />
+            android:textStyle="bold"
+            android:textSize="16sp" />
 
         <Button
             android:id="@+id/logout"
