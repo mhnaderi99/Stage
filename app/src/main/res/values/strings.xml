@@ -18,6 +18,8 @@
     <string name="receive_otp">get activation code</string>
     <string name="enter_code">enter activation code</string>
     <string name="login">login</string>
+
+    <string name="continue_">continue</string>
     <string name="logout">logout</string>
     <string name="follow">follow</string>
 
